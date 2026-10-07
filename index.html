@@ -3292,6 +3292,796 @@ input:checked + .slider:before {
 .night-mode .typing-indicator .dot {
   background-color: #e0e0e0 !important;
 }
+
+/* ===== 新增：加号菜单、选1选、对方状态卡片浮窗与日期分隔条样式 ===== */
+
+/* ===== ➕ 菜单面板与加号按钮 ===== */
+.plus-menu-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: var(--accent-gray);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(158, 158, 158, 0.3);
+  flex-shrink: 0;
+  border: none;
+  padding: 0;
+}
+.plus-menu-btn:hover {
+  transform: scale(1.05);
+}
+.plus-menu-btn i {
+  font-size: 24px;
+  transition: transform 0.25s ease;
+}
+.plus-menu-btn.open i {
+  transform: rotate(45deg);
+}
+/* ===== ➕ 菜单面板（从下往上弹出） ===== */
+.plus-menu-panel {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(92, 92, 92, 0.15);
+  border-radius: 18px;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+  z-index: 90;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  padding: 0 12px;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.28s ease,
+              padding 0.3s ease;
+  pointer-events: none;
+}
+.plus-menu-panel.open {
+  max-height: 170px;
+  opacity: 1;
+  padding: 14px 12px 6px;
+  pointer-events: auto;
+}
+
+/* 横向滚动包裹层 */
+.plus-menu-scroll-wrap {
+  overflow: hidden;
+  width: 100%;
+  touch-action: pan-x;
+}
+.plus-menu-track {
+  display: flex;
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* 每一页 */
+.plus-menu-page {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 2px 4px 6px;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.plus-menu-page::-webkit-scrollbar { display: none; }
+
+/* 功能项 */
+.plus-menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 60px;
+  -webkit-tap-highlight-color: transparent;
+}
+.plus-menu-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(158, 158, 158, 0.13);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: var(--accent-gray);
+}
+.plus-menu-icon i { font-size: 1.4rem; }
+.plus-menu-dots-icon { font-size: 1.3rem; font-weight: bold; letter-spacing: 2px; line-height: 1; }
+.plus-menu-item:hover .plus-menu-icon,
+.plus-menu-item:active .plus-menu-icon {
+  background: var(--accent-gray-light);
+  color: white;
+  transform: scale(1.06);
+}
+.plus-menu-label {
+  font-size: 0.68rem;
+  color: var(--text);
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+/* 页面指示点 */
+.plus-menu-indicators {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0 2px;
+  min-height: 16px;
+}
+.plus-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gray-light);
+  transition: all 0.28s ease;
+}
+.plus-indicator.active {
+  background: var(--accent);
+  width: 16px;
+  border-radius: 3px;
+}
+
+
+/* ================================================================
+   选1选 — 全屏页面
+================================================================ */
+.poll-page {
+  position: fixed; inset: 0; z-index: 2000;
+  background: var(--bg-main);
+  background-image: radial-gradient(#ffffff55 2px, transparent 2px);
+  background-size: 30px 30px;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+}
+.poll-page.open { transform: translateX(0); }
+.poll-page-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px 12px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  flex-shrink: 0;
+  backdrop-filter: blur(10px);
+}
+.poll-page-back {
+  width: 36px; height: 36px; border-radius: 50%; border: none;
+  background: #494849;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; transition: background 0.2s;
+}
+.poll-page-back:active { background: #333233; }
+.poll-page-back svg { width: 20px; height: 20px; stroke: #fff; stroke-width: 2.2; fill: none; }
+.poll-page-title { font-size: 17px; font-weight: 700; color: var(--text); flex: 1; letter-spacing: 0.3px; }
+.poll-page-body {
+  flex: 1; overflow-y: auto;
+  padding: 16px; display: flex; flex-direction: column; gap: 14px;
+}
+/* 卡片容器 */
+.poll-card {
+  background: var(--bg-panel); border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.poll-card-title {
+  font-size: 11px; font-weight: 600; color: #b08880;
+  text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px;
+}
+.poll-question-input {
+  width: 100%; border: none; outline: none;
+  font-size: 16px; color: var(--text); background: transparent;
+  font-family: inherit; line-height: 1.5; box-sizing: border-box;
+}
+.poll-question-input::placeholder { color: var(--accent-gray); }
+/* 选项行 */
+.poll-option-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.poll-option-label {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #494849; color: #fff;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.poll-option-input {
+  flex: 1; border: none; border-bottom: 1.5px solid rgba(0,0,0,0.08); outline: none;
+  font-size: 15px; color: var(--text); background: transparent;
+  padding: 5px 2px; font-family: inherit; transition: border-color 0.2s;
+}
+.poll-option-input:focus { border-bottom-color: #494849; }
+.poll-option-input::placeholder { color: var(--accent-gray-light); }
+.poll-option-remove {
+  width: 24px; height: 24px; border-radius: 50%; border: none;
+  background: rgba(0,0,0,0.07); color: var(--accent-gray);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 18px; line-height: 1;
+  flex-shrink: 0; transition: background 0.2s;
+}
+.poll-option-remove:active { background: rgba(0,0,0,0.15); }
+.poll-add-option-btn {
+  width: 100%; padding: 10px; border-radius: 10px;
+  border: 1.5px dashed var(--accent-gray-light); background: transparent;
+  color: var(--accent-gray); font-size: 14px; cursor: pointer; margin-top: 2px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.poll-add-option-btn:active { border-color: #494849; color: #494849; }
+.poll-send-btn {
+  width: 100%; padding: 14px;
+  background: #494849;
+  color: #fff; border: none; border-radius: 14px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: opacity 0.2s; box-shadow: 0 4px 14px rgba(73,72,73,0.28);
+}
+.poll-send-btn:active { opacity: 0.8; }
+/* 历史 */
+.poll-history-title {
+  font-size: 11px; font-weight: 600; color: #b08880;
+  text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px;
+}
+.poll-history-card {
+  background: var(--bg-panel); border-radius: 14px; padding: 12px 14px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06); margin-bottom: 10px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.poll-history-question { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.poll-history-option {
+  font-size: 13px; color: var(--text); padding: 5px 10px; border-radius: 8px;
+  margin-bottom: 4px; background: rgba(0,0,0,0.04);
+}
+.poll-history-option.selected {
+  background: rgba(73, 72, 73, 0.15); color: #494849; font-weight: 600;
+  border: 1px solid rgba(73, 72, 73, 0.35);
+}
+.poll-history-meta { font-size: 11px; color: var(--accent-gray); margin-top: 6px; }
+.poll-history-empty { text-align: center; color: var(--accent-gray); font-size: 14px; padding: 24px 0; }
+/* ===== 选1选 聊天消息气泡 ===== */
+.message.poll-message {
+  padding: 10px 10px 0; overflow: visible;
+  width: min(88%, 320px); max-width: min(88%, 320px);
+}
+.poll-msg-card { background: transparent; display: block; }
+.poll-msg-platform-bar {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 16px;
+  background: rgba(196, 172, 170, 0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 40px;
+  border: 0.5px solid rgba(185, 160, 158, 0.5);
+  box-shadow: 0 6px 16px rgba(170, 148, 145, 0.15), inset 0 1px 4px rgba(255, 255, 255, 0.75);
+  font-size: 13px; font-weight: 700; color: #7a5f5f; letter-spacing: 0.6px;
+  margin: 0 0 5px 0;
+}
+.poll-msg-platform-bar svg { width: 14px; height: 14px; flex-shrink: 0; color: #9a7070; }
+.poll-msg-question {
+  padding: 10px 12px 6px;
+  font-size: 14px; font-weight: 700; color: #1a1a1a; line-height: 1.4;
+}
+.poll-msg-options { padding: 0 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+.poll-msg-option {
+  padding: 8px 12px; border-radius: 10px;
+  background: #f0f0f4; font-size: 13px; color: #333;
+  cursor: pointer; transition: all 0.18s; user-select: none;
+  border: 1.5px solid transparent; display: flex; align-items: center; gap: 8px;
+}
+.poll-msg-option-label {
+  width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #ccc;
+  font-size: 10px; font-weight: 700; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; color: #888;
+}
+.poll-msg-option:active { transform: scale(0.97); }
+.poll-msg-option.selected {
+  background: rgba(196, 172, 170, 0.3);
+  color: #7a5f5f;
+  border-color: rgba(185, 158, 156, 0.6);
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(170, 148, 145, 0.18), inset 0 1px 3px rgba(255, 255, 255, 0.65);
+}
+.poll-msg-option.selected .poll-msg-option-label {
+  border-color: rgba(155, 120, 118, 0.5); color: #7a5f5f;
+}
+.poll-msg-option.disabled { pointer-events: none; }
+.poll-msg-option.selected.disabled { opacity: 1; }
+.poll-msg-countdown {
+  padding: 2px 12px 10px;
+  font-size: 11px; color: #e05050; font-weight: 600;
+}
+.poll-msg-answered {
+  padding: 2px 12px 10px;
+  font-size: 11px; color: #888; font-style: italic;
+}
+/* 夜间模式 */
+.night-mode .poll-page { background: #1a1a1a; }
+.night-mode .poll-card { background: #2a2a2a; }
+.night-mode .poll-question-input,
+.night-mode .poll-option-input { color: #e8e8e8; }
+.night-mode .poll-history-card { background: #2a2a2a; }
+.night-mode .poll-history-question { color: #e8e8e8; }
+.night-mode .poll-history-option { background: #333; color: #ccc; }
+.night-mode .poll-history-option.selected { background: rgba(180,140,138,0.35); color: #f0d8d6; }
+.night-mode .poll-msg-question { color: #e8e8e8; }
+.night-mode .poll-msg-option { background: #333; color: #ddd; }
+
+/* ===== 选1选 扩展（题型/图片/选项卡/齿轮/设置页/梦角调度） ===== */
+.poll-page-gear {
+  width: 32px; height: 32px; border-radius: 50%; border: none;
+  background: rgba(73,72,73,0.1); color: #494849;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; transition: background 0.2s;
+}
+.poll-page-gear:active { background: rgba(73,72,73,0.25); }
+.poll-page-gear svg { width: 17px; height: 17px; }
+.night-mode .poll-page-gear { background: rgba(255,255,255,0.1); color: #ddd; }
+.poll-page-gear.dream-gear { background: rgba(176,136,128,0.18); color: #7a5f5f; }
+.night-mode .poll-page-gear.dream-gear { background: rgba(180,140,138,0.3); color: #f0d8d6; }
+/* 选项卡 */
+.poll-tabs {
+  display: flex; gap: 0; background: rgba(0,0,0,0.05); border-radius: 12px;
+  padding: 3px; flex-shrink: 0;
+}
+.poll-tab {
+  flex: 1; padding: 9px 0; border: none; border-radius: 10px;
+  background: transparent; color: var(--accent-gray);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s; font-family: inherit;
+}
+.poll-tab.active {
+  background: var(--bg-panel); color: var(--text);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1); font-weight: 700;
+}
+.night-mode .poll-tabs { background: rgba(255,255,255,0.07); }
+.night-mode .poll-tab.active { background: #2f2f2f; color: #f0d8d6; }
+.poll-tab-panel { display: none; flex-direction: column; gap: 14px; }
+.poll-tab-panel.active { display: flex; }
+/* 题型切换 */
+.poll-mode-row {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+}
+.poll-mode-btn {
+  padding: 6px 14px; border-radius: 20px; border: 1.5px solid rgba(73,72,73,0.25);
+  background: transparent; color: var(--accent-gray);
+  font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+  transition: all 0.2s;
+}
+.poll-mode-btn.active {
+  background: #494849; color: #fff; border-color: #494849;
+}
+.night-mode .poll-mode-btn { border-color: rgba(255,255,255,0.2); color: #aaa; }
+.night-mode .poll-mode-btn.active { background: #b48c8a; border-color: #b48c8a; color: #1a1a1a; }
+/* 问题/选项图片区 */
+.poll-qimg-row {
+  display: flex; align-items: center; gap: 10px; margin-top: 10px;
+  min-height: 40px; flex-wrap: wrap;
+}
+.poll-img-thumb {
+  position: relative; width: 64px; height: 64px; border-radius: 10px;
+  overflow: hidden; border: 1px solid rgba(0,0,0,0.1); cursor: pointer;
+  flex-shrink: 0; background: #f0f0f4;
+}
+.poll-img-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.poll-img-thumb .poll-img-del {
+  position: absolute; top: 2px; right: 2px; width: 18px; height: 18px;
+  border-radius: 50%; border: none; background: rgba(0,0,0,0.55); color: #fff;
+  font-size: 12px; line-height: 1; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+}
+.poll-img-add-btn {
+  width: 64px; height: 64px; border-radius: 10px;
+  border: 1.5px dashed var(--accent-gray-light); background: transparent;
+  color: var(--accent-gray); font-size: 22px; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.poll-img-add-btn:active { border-color: #494849; color: #494849; }
+.night-mode .poll-img-thumb { border-color: rgba(255,255,255,0.12); background: #333; }
+.night-mode .poll-img-add-btn { border-color: #555; color: #888; }
+/* 选项行（图文） */
+.poll-option-row { align-items: center; }
+.poll-option-img {
+  width: 44px; height: 44px; border-radius: 8px; object-fit: cover;
+  flex-shrink: 0; cursor: pointer; border: 1px solid rgba(0,0,0,0.1);
+}
+.poll-option-img-row {
+  display: flex; align-items: center; gap: 8px; margin-top: 4px; margin-left: 30px;
+}
+.poll-option-img-add {
+  width: 44px; height: 44px; border-radius: 8px;
+  border: 1.5px dashed var(--accent-gray-light); background: transparent;
+  color: var(--accent-gray); font-size: 17px; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+/* 填空题 */
+.poll-fill-row { display: flex; flex-direction: column; gap: 8px; }
+.poll-fill-input {
+  width: 100%; box-sizing: border-box; border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: 10px; padding: 10px 12px; font-size: 15px;
+  color: var(--text); background: transparent; outline: none; font-family: inherit;
+}
+.poll-fill-input:focus { border-color: #494849; }
+.night-mode .poll-fill-input { border-color: rgba(255,255,255,0.15); color: #e8e8e8; }
+/* 设置页（作答时间 / 梦角调度） */
+.poll-settings-page {
+  position: fixed; inset: 0; z-index: 2100;
+  background: var(--bg-main);
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+}
+.poll-settings-page.open { transform: translateX(0); }
+.poll-settings-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.poll-settings-row label {
+  font-size: 14px; color: var(--text); font-weight: 600;
+  width: 64px; flex-shrink: 0;
+}
+.poll-settings-input {
+  width: 76px; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 10px;
+  padding: 8px 10px; font-size: 15px; color: var(--text);
+  background: transparent; outline: none; font-family: inherit;
+}
+.poll-settings-input:focus { border-color: #494849; }
+.poll-settings-select {
+  flex: 1; border: 1.5px solid rgba(0,0,0,0.12); border-radius: 10px;
+  padding: 8px 10px; font-size: 14px; color: var(--text);
+  background: var(--bg-panel); outline: none; font-family: inherit;
+  -webkit-appearance: none; appearance: none;
+}
+.night-mode .poll-settings-input { border-color: rgba(255,255,255,0.15); color: #e8e8e8; }
+.night-mode .poll-settings-select { background: #2a2a2a; color: #e8e8e8; border-color: rgba(255,255,255,0.15); }
+.poll-settings-hint { font-size: 12px; color: var(--accent-gray); line-height: 1.6; margin: 4px 0 10px; }
+.poll-settings-save {
+  width: 100%; padding: 13px; background: #494849; color: #fff; border: none;
+  border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer;
+  margin-top: 10px; font-family: inherit;
+}
+.poll-settings-save:active { opacity: 0.85; }
+.night-mode .poll-settings-save { background: #b48c8a; color: #1a1a1a; }
+/* 梦角发送面板 */
+.poll-dream-hint {
+  font-size: 12px; color: var(--accent-gray); line-height: 1.6;
+  background: rgba(176,136,128,0.08); border-radius: 10px; padding: 10px 12px;
+  border: 1px dashed rgba(176,136,128,0.35);
+}
+.night-mode .poll-dream-hint { background: rgba(180,140,138,0.1); border-color: rgba(180,140,138,0.3); color: #b8a8a6; }
+.poll-preset-card {
+  background: var(--bg-panel); border-radius: 12px; padding: 10px 12px;
+  border: 1px solid rgba(0,0,0,0.07); margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.night-mode .poll-preset-card { background: #2a2a2a; border-color: rgba(255,255,255,0.07); }
+.poll-preset-row1 { display: flex; align-items: center; gap: 8px; }
+.poll-preset-q { font-size: 14px; font-weight: 700; color: var(--text); flex: 1; line-height: 1.4; }
+.night-mode .poll-preset-q { color: #e8e8e8; }
+.poll-preset-ops { display: flex; gap: 6px; flex-shrink: 0; }
+.poll-preset-op {
+  padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(73,72,73,0.25);
+  background: transparent; color: var(--accent-gray); font-size: 12px;
+  cursor: pointer; font-family: inherit;
+}
+.poll-preset-op:active { background: rgba(73,72,73,0.12); }
+.poll-preset-meta { font-size: 11px; color: var(--accent-gray); margin-top: 6px; }
+.poll-preset-disabled { opacity: 0.45; }
+/* 消息气泡中的图片（原尺寸，点击放大） */
+.poll-msg-qimage {
+  display: block; max-width: 100%; margin: 4px 12px 2px 12px;
+  border-radius: 8px; cursor: pointer;
+}
+.poll-msg-option-img {
+  width: 40px; height: 40px; border-radius: 8px; object-fit: cover;
+  flex-shrink: 0; pointer-events: none;
+}
+.poll-msg-opt-text { flex: 1; line-height: 1.4; word-break: break-word; }
+.poll-msg-fill-input {
+  width: calc(100% - 24px); margin: 0 12px 10px; box-sizing: border-box;
+  border: 1.5px solid rgba(0,0,0,0.15); border-radius: 10px;
+  padding: 8px 10px; font-size: 13px; color: #333; outline: none;
+  font-family: inherit;
+}
+.poll-msg-fill-input:focus { border-color: #b08880; }
+.night-mode .poll-msg-fill-input { background: #333; color: #eee; border-color: rgba(255,255,255,0.2); }
+.poll-msg-fill-send {
+  display: block; width: calc(100% - 24px); margin: 0 12px 10px; padding: 8px;
+  background: #494849; color: #fff; border: none; border-radius: 10px;
+  font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.poll-msg-fill-send:active { opacity: 0.85; }
+.night-mode .poll-msg-fill-send { background: #b48c8a; color: #1a1a1a; }
+/* 图片预览遮罩 */
+.poll-img-viewer {
+  position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.88);
+  display: flex; align-items: center; justify-content: center; cursor: zoom-out;
+}
+.poll-img-viewer img { max-width: 94vw; max-height: 90vh; object-fit: contain; border-radius: 6px; }
+
+
+
+/* ===== 对方状态浮窗（可拖拽"正在挑选中"动画） ===== */
+.typing-float {
+  position: fixed;
+  z-index: 9800;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px 3px 3px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(248,242,246,0.93) 55%, rgba(241,233,241,0.93) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 6px 18px rgba(138,127,141,0.28), 0 2px 6px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  left: 14px;
+  bottom: 110px;
+}
+
+.typing-float.show { display: flex; animation: typingFloatIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.typing-float.hide-anim { animation: typingFloatOut 0.26s ease forwards; }
+.typing-float.dragging { cursor: grabbing; box-shadow: 0 16px 42px rgba(138,127,141,0.5), 0 3px 10px rgba(0,0,0,0.12); }
+
+@keyframes typingFloatIn {
+  0%   { opacity: 0; transform: translateY(16px) scale(0.82); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes typingFloatOut {
+  0%   { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.82) translateY(10px); }
+}
+
+/* 头像：无边框、无光环、不旋转，纯头像同步用户设置 */
+.typing-float-avatar {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.typing-float-avatar img,
+.typing-float-avatar > span {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #c9a7c5, #8a7f8d);
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+/* 文本区 */
+.typing-float-info { display: flex; flex-direction: column; gap: 0; min-width: 0; }
+.typing-float-name {
+  font-size: 0.6rem;
+  color: #9a8d99;
+  line-height: 1.15;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.typing-float-status { display: flex; align-items: center; gap: 4px; font-size: 0.7rem; font-weight: 600; color: #7d6f7d; line-height: 1.2; }
+.typing-float-status .tf-icon { font-size: 0.75rem; animation: typingFloatIcon 1.6s ease-in-out infinite; }
+.typing-float-status .tf-icon.hidden { display: none; }
+@keyframes typingFloatIcon {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%      { transform: scale(1.2) rotate(-10deg); }
+}
+.typing-float-text { white-space: nowrap; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .typing-float-text {
+    background: linear-gradient(90deg, #7d6f7d 0%, #b08fae 50%, #7d6f7d 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: typingFloatShimmer 2.2s linear infinite;
+  }
+}
+@keyframes typingFloatShimmer { to { background-position: -200% 0; } }
+
+/* 跳动圆点 */
+.typing-float-dots { display: flex; align-items: center; gap: 4px; margin-left: 2px; flex-shrink: 0; }
+.typing-float-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b08fae, #8a7f8d);
+  animation: typingFloatDot 1.3s infinite ease-in-out;
+}
+.typing-float-dots i:nth-child(2) { animation-delay: 0.18s; }
+.typing-float-dots i:nth-child(3) { animation-delay: 0.36s; }
+@keyframes typingFloatDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+  30%           { transform: translateY(-5px); opacity: 1; }
+}
+
+/* 拖拽把手提示（六点 Grip） */
+.typing-float-grip {
+  display: grid;
+  grid-template-columns: repeat(2, 2px);
+  gap: 2px;
+  margin-left: 1px;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+.typing-float-grip span { width: 2px; height: 2px; border-radius: 50%; background: #8a7f8d; }
+
+/* 夜间模式 */
+.night-mode .date-divider { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.88); box-shadow: none; }
+.night-mode .recall-notice-pill { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.88); }
+.night-mode .typing-float {
+  background: linear-gradient(135deg, rgba(58,52,60,0.96) 0%, rgba(46,40,50,0.93) 100%);
+  border-color: rgba(255,255,255,0.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 3px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.night-mode .typing-float-name { color: rgba(255,255,255,0.5); }
+.night-mode .typing-float-status { color: #d8cdd8; }
+.night-mode .typing-float-grip span { background: #c9bdc9; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .night-mode .typing-float-text {
+    background: linear-gradient(90deg, #d8cdd8 0%, #e6c3d5 50%, #d8cdd8 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* 输入区域 */
+.input-area {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  position: relative;
+}
+
+/* 修改：缩短输入框 */
+.message-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.message-input:focus {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* 输入区域按钮容器 */
+.input-area-buttons {
+  display: flex;
+  gap: 6px;           
+  align-items: center;
+  flex-wrap: nowrap;   
+  width: 100%;
+}
+
+/* 修改：将发送按钮改为灰色主题色 */
+.send-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 22px;
+  background: var(--accent-gray);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(158, 158, 158, 0.3);
+  white-space: nowrap;
+}
+
+.send-button:hover {
+  background: var(--accent-gray-light);
+  transform: translateY(-2px);
+}
+
+.send-button:active {
+  transform: translateY(0);
+}
+
+/* 修改：将"继续"按钮改为"..."图案的灰色按钮 */
+.continue-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 22px;
+  background: var(--accent-gray);
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(158, 158, 158, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.continue-button:hover {
+  background: var(--accent-gray-light);
+  transform: translateY(-2px);
+}
+
+/* 修改：将图片上传按钮改为灰色主题色 */
+.upload-image-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: var(--accent-gray);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(158, 158, 158, 0.3);
+  flex-shrink: 0;
+}
+
+.upload-image-button:hover {
+  background: var(--accent-gray-light);
+  transform: translateY(-2px);
+}
+
+.upload-image-button i {
+  font-size: 1.2rem;
+}
+
+
+
+/* ===== 日期分隔条（每天消息的日期显示） ===== */
+.date-divider {
+  align-self: center;
+  margin: 14px auto 10px;
+  padding: 5px 16px;
+  font-size: 0.82rem;
+  color: #222;
+  background: rgba(138,127,141,0.15);
+  border-radius: 12px;
+  width: fit-content;
+  max-width: 80%;
+  text-align: center;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+
+
 </style>
 </head>
 <body>
@@ -3390,16 +4180,51 @@ input:checked + .slider:before {
       <div class="input-area">
         <div class="input-area-buttons">
           <input type="text" class="message-input" id="messageInput" placeholder="输入消息..." maxlength="200">
-          <div class="upload-image-button" id="uploadImageButton" title="发送图片">
+          <!-- 原始功能按钮（隐藏，供JS调用） -->
+          <div class="upload-image-button" id="uploadImageButton" style="display:none;" title="发送图片">
             <i class="material-icons">image</i>
           </div>
-          <!-- 新增：表情包按钮 -->
-          <div class="upload-image-button" id="stickerPickerButton" title="表情包">
+          <div class="upload-image-button" id="stickerPickerButton" style="display:none;" title="表情包">
             <i class="material-icons">insert_emoticon</i>
           </div>
           <input type="file" id="imageUpload" class="hidden-file-input" accept="image/*">
-          <button class="continue-button" id="continueButton">...</button>
+          <button class="continue-button" id="continueButton" style="display:none;">...</button>
+          <!-- ➕ 加号菜单按钮（保持原按钮样式） -->
+          <button class="plus-menu-btn" id="plusMenuBtn" title="更多功能">
+            <i class="material-icons">add</i>
+          </button>
           <button class="send-button" id="sendButton">发送</button>
+        </div>
+        <!-- ➕ 功能菜单面板（仅收纳原有功能+选1选） -->
+        <div class="plus-menu-panel" id="plusMenuPanel">
+          <div class="plus-menu-scroll-wrap" id="plusMenuScrollWrap">
+            <div class="plus-menu-track" id="plusMenuTrack">
+              <div class="plus-menu-page">
+                <div class="plus-menu-item" id="plusImageBtn">
+                  <div class="plus-menu-icon"><i class="material-icons">image</i></div>
+                  <span class="plus-menu-label">图片</span>
+                </div>
+                <div class="plus-menu-item" id="plusStickerBtn">
+                  <div class="plus-menu-icon"><i class="material-icons">insert_emoticon</i></div>
+                  <span class="plus-menu-label">表情包</span>
+                </div>
+                <div class="plus-menu-item" id="plusContinueBtn">
+                  <div class="plus-menu-icon"><span class="plus-menu-dots-icon">···</span></div>
+                  <span class="plus-menu-label">续写</span>
+                </div>
+                <div class="plus-menu-item" id="plusPollBtn">
+                  <div class="plus-menu-icon">
+                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                      <rect x="2" y="5" width="22" height="5" rx="2.5" fill="currentColor"/>
+                      <rect x="2" y="12" width="16" height="5" rx="2.5" fill="currentColor" opacity="0.7"/>
+                      <rect x="2" y="19" width="19" height="5" rx="2.5" fill="currentColor" opacity="0.5"/>
+                    </svg>
+                  </div>
+                  <span class="plus-menu-label">选1选</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- 新增：表情包选择器弹出面板 -->
         <div class="sticker-picker-popover" id="user-sticker-picker">
@@ -4032,6 +4857,9 @@ class ChatDataManager {
         this.GROUP_SETTINGS_KEY = 'seven_and_wish_group_settings';
         // 新增拍一拍设置存储键
         this.POKE_SETTINGS_KEY = 'seven_and_wish_poke_settings';
+        // 新增选1选扩展存储键（设置/预设问题 + 梦角发送调度计划）
+        this.POLL_SETTINGS_KEY = 'seven_and_wish_poll_settings';
+        this.POLL_AUTO_SCHEDULE_KEY = 'seven_and_wish_poll_auto_schedule';
         
         // 版本控制
         this.DATA_VERSION_KEY = 'seven_and_wish_data_version';
@@ -4569,6 +5397,24 @@ this.setStoredData(this.POKE_SETTINGS_KEY, {
         return this.setStoredData(this.GROUP_SETTINGS_KEY, settings);
     }
     
+    // ---- 选1选扩展：设置与预设问题 ----
+    getPollSettings() {
+        return this.getStoredData(this.POLL_SETTINGS_KEY) || null;
+    }
+
+    savePollSettings(settings) {
+        return this.setStoredData(this.POLL_SETTINGS_KEY, settings);
+    }
+
+    // ---- 选1选扩展：梦角发送调度计划 ----
+    getPollAutoSchedule() {
+        return this.getStoredData(this.POLL_AUTO_SCHEDULE_KEY) || null;
+    }
+
+    savePollAutoSchedule(sched) {
+        return this.setStoredData(this.POLL_AUTO_SCHEDULE_KEY, sched === undefined ? null : sched);
+    }
+
     // ---- 音乐设置 ----
     getMusicSettings() {
         return this.getStoredData(this.MUSIC_SETTINGS_KEY) || {
@@ -4678,6 +5524,9 @@ class ChatApp {
             // 新增拍一拍设置
             pokeSettings: null,
             pokeTimer: null,
+            // 选1选扩展
+            pollSettings: null,
+            pollAutoSchedule: null,
             
             // 运行时状态
             isTyping: false,
@@ -4810,6 +5659,8 @@ class ChatApp {
         
         // 加载拍一拍设置
         this.appData.pokeSettings = this.dataManager.getPokeSettings();
+        this.appData.pollSettings = this.dataManager.getPollSettings() || null;
+        this.appData.pollAutoSchedule = this.dataManager.getPollAutoSchedule() || null;
         
         // 加载已抽取塔罗牌记录（Set）
         this.appData.drawnCards = this.dataManager.getDrawnCards();
@@ -4901,6 +5752,12 @@ class ChatApp {
         
         // 保存拍一拍设置
         this.dataManager.savePokeSettings(this.appData.pokeSettings);
+        if (this.appData.pollSettings) {
+            this.dataManager.savePollSettings(this.appData.pollSettings);
+        }
+        if (this.appData.pollAutoSchedule !== undefined) {
+            this.dataManager.savePollAutoSchedule(this.appData.pollAutoSchedule);
+        }
         
         // 保存已抽取塔罗牌记录
         this.dataManager.saveDrawnCards(this.appData.drawnCards);
@@ -5073,10 +5930,13 @@ class ChatApp {
             `;
             messagesArea.appendChild(emptyMessage);
         } else {
+            const _todayStr = this._dateStr(new Date());
+            this.appData.messages.forEach(m => { if (!m.date) m.date = _todayStr; });
             // 渲染所有消息
             this.appData.messages.forEach(msg => {
                 const messageContainer = document.createElement('div');
                 messageContainer.className = `message-container ${msg.sender}`;
+                messageContainer.dataset.messageId = msg.id;
                 
                 // 头像
                 const messageAvatar = document.createElement('div');
@@ -5160,6 +6020,8 @@ class ChatApp {
                     messageDiv.classList.add('call-message');
                 } else if (isPokeMessage) {
                     messageDiv.classList.add('poke-message');
+                } else if (msg.type === 'poll') {
+                    messageDiv.classList.add('poll-message');
                 }
                 
                 // 检查是否为已读不回消息
@@ -5170,11 +6032,14 @@ class ChatApp {
                 let quotedContent = '';
                 if (msg.quotedMessage) {
                     const quoted = msg.quotedMessage;
+                    const qPreview = quoted.isSticker ? 
+                              `<img src="${quoted.stickerData}" alt="表情包" style="max-height:20px;">` :
+                              quoted.type === 'poll' ?
+                              `🗳️ ${quoted.pollData?.question?.substring(0, 24) || '[选1选]'}` :
+                              quoted.text || '';
                     quotedContent = `
                         <div class="quoted-message" data-id="${quoted.id}">
-                            ${quoted.isSticker ? 
-                              `<img src="${quoted.stickerData}" alt="表情包" style="max-height:20px;">` : 
-                              quoted.text || ''}
+                            ${qPreview}
                         </div>
                     `;
                 }
@@ -5225,8 +6090,26 @@ class ChatApp {
                         </div>
                     `;
                 } else if (isPokeMessage) {
-                    // 拍一拍消息：只显示文本，没有时间、状态、操作菜单
-                    messageDiv.innerHTML = `${msg.text || ''}`;
+                    messageDiv.innerHTML = `
+                        ${senderNameHTML}
+                        <div style="font-size:0.85rem; color:var(--text); opacity:0.8;">
+                            👉 ${msg.text}
+                        </div>
+                    `;
+                } else if (msg.type === 'poll') {
+                    messageDiv.className = `message ${msg.sender} poll-message`;
+                    if (typeof renderPollMsgCard === 'function') {
+                        renderPollMsgCard(msg, messageDiv);
+                    }
+                    messageDiv.insertAdjacentHTML('beforeend', `
+                        <div class="message-time">
+                            <span>${msg.time || ''}</span>
+                            <span class="message-status">
+                                <span class="status-check ${msg.read ? 'double' : 'single'}">${msg.read ? '✓✓' : '✓'}</span>
+                                <span>${msg.read ? '已读' : '未读'}</span>
+                            </span>
+                        </div>
+                    `);
                 } else {
                     // 普通文本消息
                     messageDiv.innerHTML = `
@@ -5287,6 +6170,10 @@ class ChatApp {
             });
         }
         
+        // 日期分隔条 + 对方状态浮窗同步
+        this._renderDateDividers(messagesArea);
+        this._syncTypingWidget();
+
         // 滚动到底部
         messagesArea.scrollTop = messagesArea.scrollHeight;
     }
@@ -6093,6 +6980,7 @@ class ChatApp {
             sender: 'self',
             time: this.getCurrentTime(),
             read: false,
+            date: this._dateStr(new Date()),
             quotedMessage: this.appData.quotedMessage ? {...this.appData.quotedMessage} : null
         };
         
@@ -6148,15 +7036,273 @@ class ChatApp {
         return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
     }
     
-    startTypingIndicator() {
+    startTypingIndicator(status) {
+        if (status) {
+            this._typingStatus = status;
+        } else if (!this._typingStatus) {
+            this._typingStatus = this._guessTypingStatus();
+        }
         this.appData.isTyping = true;
-        this.renderMessages();
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) {
+            typingIndicator.classList.add('active');
+        }
+        this._syncTypingWidget();
     }
     
-    stopTypingIndicator() {
+    stopTypingIndicator(status) {
+        if (status && this._typingStatus && this._typingStatus !== status) return;
         this.appData.isTyping = false;
-        this.renderMessages();
+        this._typingStatus = null;
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) {
+            typingIndicator.classList.remove('active');
+        }
+        this._syncTypingWidget();
     }
+    markDirty() {
+        this.saveAllData();
+    }
+
+    setTypingStatus(status) {
+        this._typingStatus = status || 'typing';
+    }
+
+    _guessTypingStatus() {
+        const hasPhrases  = (this.appData.responsePhrases || []).length > 0;
+        const hasStickers = (this.appData.stickers || []).length > 0;
+        if (!hasPhrases && hasStickers) return 'sticker';
+        if (hasPhrases && !hasStickers) return 'card';
+        if (!hasPhrases && !hasStickers) return 'typing';
+        return 'typing';
+    }
+
+    _ensureTypingFloatWidget() {
+        let w = document.getElementById('typingFloatWidget');
+        if (w) return w;
+        w = document.createElement('div');
+        w.id = 'typingFloatWidget';
+        w.className = 'typing-float';
+        w.innerHTML = `
+            <div class="typing-float-avatar"><span>❤</span></div>
+            <div class="typing-float-info">
+                <div class="typing-float-name"></div>
+                <div class="typing-float-status">
+                    <span class="tf-icon hidden"></span>
+                    <span class="typing-float-text">正在输入</span>
+                    <span class="typing-float-dots"><i></i><i></i><i></i></span>
+                </div>
+            </div>
+            <div class="typing-float-grip"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+        document.body.appendChild(w);
+        this._applySavedFloatPos(w);
+        this._bindFloatDrag(w);
+        return w;
+    }
+
+    _applySavedFloatPos(w) {
+        try {
+            const saved = JSON.parse(localStorage.getItem('mjTypingFloatPos') || 'null');
+            if (saved && saved.left && saved.top) {
+                w.style.left = saved.left;
+                w.style.top = saved.top;
+                w.style.right = 'auto';
+                w.style.bottom = 'auto';
+            }
+        } catch (e) {}
+    }
+
+    _bindFloatDrag(w) {
+        let startX = 0, startY = 0, origX = 0, origY = 0, dragging = false;
+
+        w.addEventListener('pointerdown', (e) => {
+            if (e.button !== undefined && e.button !== 0) return;
+            const rect = w.getBoundingClientRect();
+            w.style.left = rect.left + 'px';
+            w.style.top = rect.top + 'px';
+            w.style.right = 'auto';
+            w.style.bottom = 'auto';
+            startX = e.clientX; startY = e.clientY;
+            origX = rect.left;  origY = rect.top;
+            dragging = true;
+            w.classList.add('dragging');
+            try { w.setPointerCapture(e.pointerId); } catch (err) {}
+            e.preventDefault();
+        });
+
+        w.addEventListener('pointermove', (e) => {
+            if (!dragging) return;
+            let nx = origX + (e.clientX - startX);
+            let ny = origY + (e.clientY - startY);
+            const maxX = window.innerWidth - w.offsetWidth;
+            const maxY = window.innerHeight - w.offsetHeight;
+            nx = Math.max(4, Math.min(nx, Math.max(4, maxX)));
+            ny = Math.max(4, Math.min(ny, Math.max(4, maxY)));
+            w.style.left = nx + 'px';
+            w.style.top = ny + 'px';
+        });
+
+        const endDrag = () => {
+            if (!dragging) return;
+            dragging = false;
+            w.classList.remove('dragging');
+            try {
+                localStorage.setItem('mjTypingFloatPos', JSON.stringify({ left: w.style.left, top: w.style.top }));
+            } catch (err) {}
+        };
+        w.addEventListener('pointerup', endDrag);
+        w.addEventListener('pointercancel', endDrag);
+    }
+
+    _syncTypingWidget() {
+        const w = this._ensureTypingFloatWidget();
+        if (!w) return;
+
+        if (this.appData.isTyping) {
+            const cfgMap = {
+                poll:    { icon: '',  text: '正在选1选' },
+                letter:  { icon: '✉️', text: '正在写信' },
+                typing:  { icon: '',  text: '正在输入' }
+            };
+            const cfg = cfgMap[this._typingStatus] || cfgMap.typing;
+            const avatar = this.appData.otherInfo?.avatar;
+            const nickname = this.appData.otherInfo?.nickname || '对方';
+            const avatarEl = w.querySelector('.typing-float-avatar');
+            if (avatarEl) avatarEl.innerHTML = avatar ? `<img src="${avatar}" alt="">` : '<span>❤</span>';
+            const nameEl = w.querySelector('.typing-float-name');
+            if (nameEl) nameEl.textContent = nickname;
+            const iconEl = w.querySelector('.tf-icon');
+            if (iconEl) {
+                if (cfg.icon) {
+                    iconEl.textContent = cfg.icon;
+                    iconEl.classList.remove('hidden');
+                } else {
+                    iconEl.textContent = '';
+                    iconEl.classList.add('hidden');
+                }
+            }
+            const textEl = w.querySelector('.typing-float-text');
+            if (textEl) textEl.textContent = cfg.text;
+
+            if (!w.classList.contains('show')) {
+                if (this._tfHideTimer) { clearTimeout(this._tfHideTimer); this._tfHideTimer = null; }
+                w.classList.remove('hide-anim');
+                void w.offsetWidth;
+                w.classList.add('show');
+            }
+        } else if (w.classList.contains('show')) {
+            if (this._tfHideTimer) clearTimeout(this._tfHideTimer);
+            w.classList.add('hide-anim');
+            this._tfHideTimer = setTimeout(() => {
+                w.classList.remove('show', 'hide-anim');
+                this._tfHideTimer = null;
+            }, 250);
+        }
+    }
+
+    // ===== 日期工具 =====
+    _dateStr(d) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    _formatDateLabel(dateStr) {
+        try {
+            const parts = dateStr.split('-');
+            const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+            const now = new Date();
+            const week = ['日', '一', '二', '三', '四', '五', '六'][d.getDay()];
+            if (d.getFullYear() === now.getFullYear()) return `${d.getMonth() + 1}月${d.getDate()}日 星期${week}`;
+            return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 星期${week}`;
+        } catch (e) {
+            return dateStr;
+        }
+    }
+
+    _renderDateDividers(area) {
+        if (!area) return;
+        area.querySelectorAll('.date-divider').forEach(el => el.remove());
+        let lastDate = null;
+        (this.appData.messages || []).forEach(msg => {
+            if (msg.date && msg.date !== lastDate) {
+                lastDate = msg.date;
+                const container = area.querySelector(`.message-container[data-message-id="${msg.id}"]`);
+                if (container) {
+                    const divider = document.createElement('div');
+                    divider.className = 'date-divider';
+                    divider.textContent = this._formatDateLabel(msg.date);
+                    area.insertBefore(divider, container);
+                }
+            }
+        });
+    }
+
+    _secureRandom() {
+        if (window.crypto && window.crypto.getRandomValues) {
+            const buf = new Uint32Array(1);
+            window.crypto.getRandomValues(buf);
+            return buf[0] / (0xFFFFFFFF + 1);
+        }
+        return Math.random();
+    }
+
+    _secureShuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(this._secureRandom() * (i + 1));
+            const t = a[i]; a[i] = a[j]; a[j] = t;
+        }
+        return a;
+    }
+
+    _buildInterleavedPhrases() {
+        const groups = (this.appData.phraseGroups && this.appData.phraseGroups.groups) || [];
+        const queues = [];
+        groups.forEach(g => {
+            if (!g || g.enabled === false || !Array.isArray(g.phrases)) return;
+            const qs = g.phrases.filter(p => p && String(p).trim());
+            if (qs.length) queues.push(this._secureShuffle(qs));
+        });
+        const qs2 = this._secureShuffle(queues);
+        const idx = qs2.map(() => 0);
+        const out = [];
+        let go = true;
+        while (go) {
+            go = false;
+            for (let i = 0; i < qs2.length; i++) {
+                if (idx[i] < qs2[i].length) { out.push(String(qs2[i][idx[i]++])); go = true; }
+            }
+        }
+        return out;
+    }
+
+    _pickPhraseCards(count) {
+        count = Math.max(1, parseInt(count, 10) || 1);
+        let flat = this._buildInterleavedPhrases();
+        if (!flat.length) {
+            flat = (this.appData.responsePhrases || []).filter(p => p && String(p).trim());
+            if (!flat.length) return [];
+            flat = this._secureShuffle(flat);
+        }
+        const recent = Array.isArray(this._recentPhraseDraws) ? this._recentPhraseDraws : [];
+        const recentSet = new Set(recent);
+        const skipBudget = Math.min(recent.length, Math.max(0, flat.length - count));
+        const picked = [];
+        let skipped = 0;
+        for (let k = 0; k < flat.length && picked.length < count; k++) {
+            const t = flat[k];
+            if (skipped < skipBudget && recentSet.has(t)) { skipped++; continue; }
+            picked.push(t);
+        }
+        if (picked.length < count) {
+            const inPick = new Set(picked);
+            for (let k = 0; k < flat.length && picked.length < count; k++) {
+                if (!inPick.has(flat[k])) { picked.push(flat[k]); inPick.add(flat[k]); }
+            }
+        }
+        this._recentPhraseDraws = picked.concat(recent).slice(0, Math.max(24, count * 2));
+        return picked;
+    }
+
     
     markSelfMessagesAsRead() {
         if (this.appData.messages) {
@@ -7798,7 +8944,9 @@ class ChatApp {
             drawnCards: Array.from(this.appData.drawnCards || []),
             loveDays: this.appData.loveDays,
             readNoReplyMessageIds: this.appData.readNoReplyMessageIds,
-            todayDate: this.appData.todayDate
+            todayDate: this.appData.todayDate,
+            pollSettings: this.appData.pollSettings || this.dataManager.getPollSettings(),
+            pollAutoSchedule: this.appData.pollAutoSchedule || this.dataManager.getPollAutoSchedule()
         };
 
         const backupData = {
@@ -7888,7 +9036,19 @@ class ChatApp {
                                 if (backup.appData.communicationSettings) this.appData.communicationSettings = backup.appData.communicationSettings;
                                 if (backup.appData.groupSettings) this.appData.groupSettings = backup.appData.groupSettings;
                                 if (backup.appData.musicSettings) this.appData.musicSettings = backup.appData.musicSettings;
-                                if (backup.appData.pokeSettings) this.appData.pokeSettings = backup.appData.pokeSettings; // 新增拍一拍
+                                if (backup.appData.pokeSettings) this.appData.pokeSettings = backup.appData.pokeSettings;
+                                // 选1选扩展（设置、预设问题、梦角发送调度计划）
+                                if (backup.appData.pollSettings) {
+                                    this.appData.pollSettings = backup.appData.pollSettings;
+                                    this.dataManager.savePollSettings(this.appData.pollSettings);
+                                }
+                                if (backup.appData.pollAutoSchedule !== undefined) {
+                                    this.appData.pollAutoSchedule = backup.appData.pollAutoSchedule;
+                                    this.dataManager.savePollAutoSchedule(this.appData.pollAutoSchedule);
+                                }
+                                if (typeof schedulePollAutoSend === 'function') {
+                                    schedulePollAutoSend();
+                                } // 新增拍一拍
                                 if (backup.appData.loveDays) this.appData.loveDays = backup.appData.loveDays;
                                 if (backup.appData.readNoReplyMessageIds) this.appData.readNoReplyMessageIds = backup.appData.readNoReplyMessageIds;
                                 if (backup.appData.drawnCards && Array.isArray(backup.appData.drawnCards)) {
@@ -8001,6 +9161,69 @@ class ChatApp {
         }
         
         // 图片上传
+        // ── ➕ 加号菜单事件监听 ──
+        const plusBtn  = document.getElementById('plusMenuBtn');
+        const plusPanel = document.getElementById('plusMenuPanel');
+        if (plusBtn && plusPanel) {
+            const stickerPanel = document.getElementById('user-sticker-picker');
+
+            plusBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = plusPanel.classList.contains('open');
+                plusPanel.classList.toggle('open');
+                plusBtn.classList.toggle('open');
+                if (!isOpen && stickerPanel) stickerPanel.style.display = 'none';
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!plusPanel.contains(e.target) && !plusBtn.contains(e.target)) {
+                    plusPanel.classList.remove('open');
+                    plusBtn.classList.remove('open');
+                }
+            });
+
+            const closePanel = () => {
+                plusPanel.classList.remove('open');
+                plusBtn.classList.remove('open');
+            };
+
+            const plusImageBtn = document.getElementById('plusImageBtn');
+            if (plusImageBtn) {
+                plusImageBtn.addEventListener('click', () => {
+                    closePanel();
+                    const imgInput = document.getElementById('imageUpload');
+                    if (imgInput) imgInput.click();
+                });
+            }
+
+            const plusStickerBtn = document.getElementById('plusStickerBtn');
+            if (plusStickerBtn) {
+                plusStickerBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closePanel();
+                    const realBtn = document.getElementById('stickerPickerButton');
+                    if (realBtn) realBtn.dispatchEvent(new MouseEvent('click', { bubbles: false }));
+                });
+            }
+
+            const plusContinueBtn = document.getElementById('plusContinueBtn');
+            if (plusContinueBtn) {
+                plusContinueBtn.addEventListener('click', () => {
+                    closePanel();
+                    const realBtn = document.getElementById('continueButton');
+                    if (realBtn) realBtn.click();
+                });
+            }
+
+            const plusPollBtn = document.getElementById('plusPollBtn');
+            if (plusPollBtn) {
+                plusPollBtn.addEventListener('click', () => {
+                    closePanel();
+                    if (typeof openPollPage === 'function') openPollPage();
+                });
+            }
+        }
+
         const uploadBtn = document.getElementById('uploadImageButton');
         const imageUpload = document.getElementById('imageUpload');
         if (uploadBtn && imageUpload) {
@@ -9305,7 +10528,1361 @@ function toggleSection(sectionId) {
 // ========================
 document.addEventListener('DOMContentLoaded', () => {
     window.chatApp = new ChatApp();
+    if (typeof schedulePollAutoSend === 'function') {
+        schedulePollAutoSend();
+    }
 });
+</script>
+
+<!-- ================================================================
+     选1选 全屏页面
+================================================================ -->
+<div class="poll-page" id="pollPageOverlay">
+  <div class="poll-page-header">
+    <button class="poll-page-back" onclick="closePollPage()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="poll-page-title">选 1 选</span>
+    <button class="poll-page-gear" id="pollAnswerGearBtn" onclick="openPollAnswerSettings()" title="对方作答时间设置">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+  <div class="poll-page-body" id="pollPageBody">
+    <!-- 选项卡 -->
+    <div class="poll-tabs">
+      <button class="poll-tab active" id="pollTabUser" onclick="switchPollTab('user')">用户发送</button>
+      <button class="poll-tab" id="pollTabDream" onclick="switchPollTab('dream')">梦角发送</button>
+    </div>
+
+    <!-- ===== 用户发送面板 ===== -->
+    <div class="poll-tab-panel active" id="pollPanelUser">
+      <!-- 问题 -->
+      <div class="poll-card">
+        <div class="poll-card-title">问题（必须包含文字，可配图）</div>
+        <input class="poll-question-input" id="pollQuestionInput" type="text"
+          placeholder="输入你想问的问题…" maxlength="80">
+        <div class="poll-qimg-row" id="pollQuestionImgRow"></div>
+      </div>
+      <!-- 题型 -->
+      <div class="poll-card">
+        <div class="poll-card-title">题型</div>
+        <div class="poll-mode-row">
+          <button class="poll-mode-btn active" id="pollModeSingle" onclick="setPollBuilderMode('single')">单选</button>
+          <button class="poll-mode-btn" id="pollModeMulti" onclick="setPollBuilderMode('multi')">多选</button>
+          <button class="poll-mode-btn" id="pollModeFill" onclick="setPollBuilderMode('fill')">填空</button>
+        </div>
+      </div>
+      <!-- 选项（单选/多选） -->
+      <div class="poll-card" id="pollOptionsCard">
+        <div class="poll-card-title">选项（至少 2 个，可纯文字 / 纯图片 / 图文）</div>
+        <div id="pollOptionsContainer"></div>
+        <button class="poll-add-option-btn" onclick="addPollOption()">＋ 添加选项</button>
+      </div>
+      <!-- 发送 -->
+      <button class="poll-send-btn" onclick="doSendPoll()">发送给对方</button>
+    </div>
+
+    <!-- ===== 梦角发送面板 ===== -->
+    <div class="poll-tab-panel" id="pollPanelDream">
+      <div class="poll-dream-hint" id="pollDreamHint"></div>
+      <!-- 问题 -->
+      <div class="poll-card">
+        <div class="poll-card-title">预设问题（必须包含文字，可配图）</div>
+        <input class="poll-question-input" id="pollDreamQuestionInput" type="text"
+          placeholder="输入要预设给对方的问题…" maxlength="80">
+        <div class="poll-qimg-row" id="pollDreamQuestionImgRow"></div>
+      </div>
+      <!-- 题型 -->
+      <div class="poll-card">
+        <div class="poll-card-title">题型</div>
+        <div class="poll-mode-row">
+          <button class="poll-mode-btn active" id="pollDreamModeSingle" onclick="setPollDreamBuilderMode('single')">单选</button>
+          <button class="poll-mode-btn" id="pollDreamModeMulti" onclick="setPollDreamBuilderMode('multi')">多选</button>
+          <button class="poll-mode-btn" id="pollDreamModeFill" onclick="setPollDreamBuilderMode('fill')">填空</button>
+        </div>
+      </div>
+      <!-- 选项 -->
+      <div class="poll-card" id="pollDreamOptionsCard">
+        <div class="poll-card-title">选项（至少 2 个，可纯文字 / 纯图片 / 图文）</div>
+        <div id="pollDreamOptionsContainer"></div>
+        <button class="poll-add-option-btn" onclick="addPollDreamOption()">＋ 添加选项</button>
+      </div>
+      <!-- 保存预设 -->
+      <button class="poll-send-btn" onclick="savePollPreset()">保存预设问题</button>
+      <!-- 预设列表 -->
+      <div class="poll-card">
+        <div class="poll-card-title" style="display:flex;align-items:center;justify-content:space-between;">
+          <span>已预设的问题</span>
+          <button class="poll-page-gear dream-gear" style="width:26px;height:26px;" onclick="openPollDreamSettings()" title="发送间隔与次数设置">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+        <div id="pollPresetList"></div>
+      </div>
+    </div>
+
+    <!-- 历史记录（共用） -->
+    <div>
+      <div class="poll-history-title">历史记录</div>
+      <div id="pollHistoryList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 对方作答时间设置页 ===== -->
+<div class="poll-settings-page" id="pollAnswerSettingsPage">
+  <div class="poll-page-header">
+    <button class="poll-page-back" onclick="closePollAnswerSettings()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="poll-page-title">对方作答时间设置</span>
+  </div>
+  <div class="poll-page-body">
+    <div class="poll-card">
+      <div class="poll-card-title">最短时间</div>
+      <div class="poll-settings-row">
+        <label>最短</label>
+        <input class="poll-settings-input" id="pollAnswerMinInput" type="number" min="1" step="1">
+        <select class="poll-settings-select" id="pollAnswerMinUnit">
+          <option value="秒">秒</option>
+          <option value="分钟">分钟</option>
+        </select>
+      </div>
+      <div class="poll-card-title" style="margin-top:14px;">最长时间</div>
+      <div class="poll-settings-row">
+        <label>最长</label>
+        <input class="poll-settings-input" id="pollAnswerMaxInput" type="number" min="1" step="1">
+        <select class="poll-settings-select" id="pollAnswerMaxUnit">
+          <option value="秒">秒</option>
+          <option value="分钟">分钟</option>
+        </select>
+      </div>
+      <div class="poll-card-title" style="margin-top:14px;">填空题回复字卡条数</div>
+      <div class="poll-settings-row">
+        <label>最少</label>
+        <input class="poll-settings-input" id="pollFillCardsMinInput" type="number" min="1" step="1">
+        <span style="font-size:12px;color:var(--accent-gray);">条字卡</span>
+      </div>
+      <div class="poll-settings-row" style="margin-top:8px;">
+        <label>最多</label>
+        <input class="poll-settings-input" id="pollFillCardsMaxInput" type="number" min="1" step="1">
+        <span style="font-size:12px;color:var(--accent-gray);">条字卡</span>
+      </div>
+      <div class="poll-settings-hint">设置后，对方（梦角）会在最短与最长时间之间随机一个时刻作答你发送的选1选，适用于单选、多选和填空。最长时间不能小于最短时间。填空题回复字卡条数仅对你发送给对方的填空题生效：对方会在「回复词条管理」中已启用的分组里随机抽取该条数的字卡作为回答；梦角预设发给你的填空题由你自由填写，不受此限制。</div>
+      <button class="poll-settings-save" onclick="savePollAnswerSettings()">保存设置</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 梦角发送设置页 ===== -->
+<div class="poll-settings-page" id="pollDreamSettingsPage">
+  <div class="poll-page-header">
+    <button class="poll-page-back" onclick="closePollDreamSettings()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="poll-page-title">梦角发送设置</span>
+  </div>
+  <div class="poll-page-body">
+    <div class="poll-card">
+      <div class="poll-card-title">发送间隔 — 最短</div>
+      <div class="poll-settings-row">
+        <label>最短</label>
+        <input class="poll-settings-input" id="pollAutoMinInput" type="number" min="1" step="1">
+        <select class="poll-settings-select" id="pollAutoMinUnit">
+          <option value="分钟">分钟</option>
+          <option value="小时">小时</option>
+        </select>
+      </div>
+      <div class="poll-card-title" style="margin-top:14px;">发送间隔 — 最长</div>
+      <div class="poll-settings-row">
+        <label>最长</label>
+        <input class="poll-settings-input" id="pollAutoMaxInput" type="number" min="1" step="1">
+        <select class="poll-settings-select" id="pollAutoMaxUnit">
+          <option value="分钟">分钟</option>
+          <option value="小时">小时</option>
+        </select>
+      </div>
+      <div class="poll-card-title" style="margin-top:14px;">每个间隔周期内发送次数</div>
+      <div class="poll-settings-row">
+        <label>最少</label>
+        <input class="poll-settings-input" id="pollCountMinInput" type="number" min="0" step="1">
+      </div>
+      <div class="poll-settings-row">
+        <label>最多</label>
+        <input class="poll-settings-input" id="pollCountMaxInput" type="number" min="0" step="1">
+      </div>
+      <div class="poll-settings-hint">梦角会在设定的最短与最长间隔之间随机一个周期，并在周期内随机时刻按设定的次数范围发送预设的选1选给你回答。至少启用 1 个预设问题后才会开始发送。次数为 0 时暂不发送。</div>
+      <button class="poll-settings-save" onclick="savePollDreamSettings()">保存设置</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+/* ================================================================
+   选1选 功能模块
+================================================================ */
+var _pollCountdowns = {}; /* msgId → intervalId/timeoutId */
+var _pollAutoTimers = []; /* 梦角选1选调度 setTimeout id 列表 */
+
+/* ── 工具 ── */
+function _pollDefaultSettings() {
+    return {
+        answerMin: 2, answerMinUnit: '秒',
+        answerMax: 8, answerMaxUnit: '秒',
+        autoMin: 30, autoMinUnit: '分钟',
+        autoMax: 120, autoMaxUnit: '分钟',
+        countMin: 1, countMax: 1,
+        fillCardsMin: 1, fillCardsMax: 1,
+        presets: []
+    };
+}
+function _pollGetSettings() {
+    var app = window.chatApp;
+    if (app && app.appData) {
+        if (!app.appData.pollSettings) app.appData.pollSettings = _pollDefaultSettings();
+        var s = app.appData.pollSettings;
+        if (!s.presets) s.presets = [];
+        /* 旧数据兜底：补齐填空题回复字卡条数设置 */
+        if (s.fillCardsMin === undefined || s.fillCardsMin === null || isNaN(Number(s.fillCardsMin))) s.fillCardsMin = 1;
+        if (s.fillCardsMax === undefined || s.fillCardsMax === null || isNaN(Number(s.fillCardsMax))) s.fillCardsMax = 1;
+        return s;
+    }
+    return _pollDefaultSettings();
+}
+function _pollUnitMs(v, unit) {
+    v = Math.max(1, Number(v) || 1);
+    unit = unit || '秒';
+    if (unit === '分钟') return v * 60000;
+    if (unit === '小时') return v * 3600000;
+    return v * 1000;
+}
+function _pollRandInt(min, max) {
+    if (max < min) max = min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function _pollIsAnswered(d) {
+    return !!(d && (d.answeredAt ||
+        (d.selectedIndex !== null && d.selectedIndex !== undefined) ||
+        (Array.isArray(d.selectedIndexes) && d.selectedIndexes.length) ||
+        d.fillAnswer));
+}
+function _pollNormOptions(opts) {
+    return (opts || []).map(function(o) {
+        return typeof o === 'string' ? { text: o, image: null }
+             : { text: (o && o.text) || '', image: (o && o.image) || null };
+    });
+}
+function _pollSaveSettings() {
+    var app = window.chatApp;
+    if (!app || !app.dataManager) return;
+    app.dataManager.savePollSettings(app.appData.pollSettings);
+    if (app.markDirty) app.markDirty();
+}
+function _pollPersistSchedule() {
+    var app = window.chatApp;
+    if (!app || !app.dataManager) return;
+    app.dataManager.savePollAutoSchedule(app.appData.pollAutoSchedule || null);
+}
+/* 局部刷新单条消息 DOM（增量渲染下，先删节点再 renderMessages 补回） */
+function _pollRefreshMsgDom(msgId) {
+    var app = window.chatApp;
+    if (!app) return;
+    var area = document.getElementById('messagesArea');
+    if (!area) return;
+    var el = area.querySelector('.message-container[data-message-id="' + msgId + '"]');
+    if (el) el.remove();
+    app.renderMessages();
+}
+
+/* ── 图片选择 / 压缩 / 预览 ── */
+function _pollCompressImage(dataUrl, cb) {
+    var img = new Image();
+    img.onload = function() {
+        try {
+            var maxW = 800;
+            var scale = Math.min(1, maxW / (img.width || 1));
+            var w = Math.max(1, Math.round(img.width * scale));
+            var h = Math.max(1, Math.round(img.height * scale));
+            var cv = document.createElement('canvas');
+            cv.width = w; cv.height = h;
+            cv.getContext('2d').drawImage(img, 0, 0, w, h);
+            cb(cv.toDataURL('image/jpeg', 0.85));
+        } catch (e) { cb(dataUrl); }
+    };
+    img.onerror = function() { cb(dataUrl); };
+    img.src = dataUrl;
+}
+function _pollPickImage(cb) {
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.onchange = function(e) {
+        var f = e.target.files && e.target.files[0];
+        if (!f) return;
+        var r = new FileReader();
+        r.onload = function(ev) { _pollCompressImage(ev.target.result, cb); };
+        r.readAsDataURL(f);
+    };
+    inp.click();
+}
+function _pollViewImage(src) {
+    var v = document.createElement('div');
+    v.className = 'poll-img-viewer';
+    var im = document.createElement('img');
+    im.src = src;
+    v.appendChild(im);
+    v.onclick = function() { v.remove(); };
+    document.body.appendChild(v);
+}
+
+/* ── 页面开关 / 选项卡 ── */
+function openPollPage() {
+    var page = document.getElementById('pollPageOverlay');
+    if (!page) return;
+    _resetUserBuilder();
+    _renderPollBuilder('user');
+    _resetDreamBuilder();
+    _renderPollBuilder('dream');
+    renderPollPresets();
+    renderPollDreamHint();
+    renderPollHistory();
+    switchPollTab('user');
+    /* 同步用户壁纸：有壁纸则铺满全屏，无壁纸则保持默认背景（PC端/手机端一致） */
+    var bgImg = window.chatApp?.appData?.backgroundSettings?.backgroundImage;
+    if (bgImg) {
+        page.style.backgroundImage = 'url(' + bgImg + ')';
+        page.style.backgroundSize = 'cover';
+        page.style.backgroundPosition = 'center';
+        page.style.backgroundRepeat = 'no-repeat';
+    } else {
+        page.style.backgroundImage = '';
+        page.style.backgroundSize = '';
+        page.style.backgroundPosition = '';
+        page.style.backgroundRepeat = '';
+    }
+    page.classList.add('open');
+}
+function closePollPage() {
+    var page = document.getElementById('pollPageOverlay');
+    if (page) page.classList.remove('open');
+}
+function switchPollTab(which) {
+    var tabUser = document.getElementById('pollTabUser');
+    var tabDream = document.getElementById('pollTabDream');
+    var panelUser = document.getElementById('pollPanelUser');
+    var panelDream = document.getElementById('pollPanelDream');
+    if (which === 'dream') {
+        if (tabUser) tabUser.classList.remove('active');
+        if (tabDream) tabDream.classList.add('active');
+        if (panelUser) panelUser.classList.remove('active');
+        if (panelDream) panelDream.classList.add('active');
+        renderPollDreamHint();
+        renderPollPresets();
+    } else {
+        if (tabDream) tabDream.classList.remove('active');
+        if (tabUser) tabUser.classList.add('active');
+        if (panelDream) panelDream.classList.remove('active');
+        if (panelUser) panelUser.classList.add('active');
+    }
+}
+
+/* ── 设置页：对方作答时间 ── */
+function openPollAnswerSettings() {
+    var s = _pollGetSettings();
+    var mi = document.getElementById('pollAnswerMinInput');
+    var mu = document.getElementById('pollAnswerMinUnit');
+    var xi = document.getElementById('pollAnswerMaxInput');
+    var xu = document.getElementById('pollAnswerMaxUnit');
+    if (mi) mi.value = s.answerMin;
+    if (mu) mu.value = s.answerMinUnit || '秒';
+    if (xi) xi.value = s.answerMax;
+    if (xu) xu.value = s.answerMaxUnit || '秒';
+    var fcMinInp = document.getElementById('pollFillCardsMinInput');
+    var fcMaxInp = document.getElementById('pollFillCardsMaxInput');
+    if (fcMinInp) fcMinInp.value = s.fillCardsMin;
+    if (fcMaxInp) fcMaxInp.value = s.fillCardsMax;
+    var page = document.getElementById('pollAnswerSettingsPage');
+    if (page) page.classList.add('open');
+}
+function closePollAnswerSettings() {
+    var page = document.getElementById('pollAnswerSettingsPage');
+    if (page) page.classList.remove('open');
+}
+function savePollAnswerSettings() {
+    var mi = document.getElementById('pollAnswerMinInput');
+    var mu = document.getElementById('pollAnswerMinUnit');
+    var xi = document.getElementById('pollAnswerMaxInput');
+    var xu = document.getElementById('pollAnswerMaxUnit');
+    var minV = parseInt(mi && mi.value, 10);
+    var maxV = parseInt(xi && xi.value, 10);
+    if (!(minV >= 1) || !(maxV >= 1)) { alert('最短 / 最长时间都必须是不小于 1 的数字'); return; }
+    var minMs = _pollUnitMs(minV, mu && mu.value);
+    var maxMs = _pollUnitMs(maxV, xu && xu.value);
+    if (maxMs < minMs) { alert('最长时间不能小于最短时间'); return; }
+    var s = _pollGetSettings();
+    s.answerMin = minV; s.answerMinUnit = (mu && mu.value) || '秒';
+    s.answerMax = maxV; s.answerMaxUnit = (xu && xu.value) || '秒';
+    var fMin = parseInt((document.getElementById('pollFillCardsMinInput') || {}).value, 10);
+    var fMax = parseInt((document.getElementById('pollFillCardsMaxInput') || {}).value, 10);
+    if (!(fMin >= 1) || !(fMax >= 1)) { alert('填空题回复字卡条数都必须是不小于 1 的数字'); return; }
+    if (fMax < fMin) { alert('填空题回复字卡的最多条数不能小于最少条数'); return; }
+    s.fillCardsMin = fMin; s.fillCardsMax = fMax;
+    _pollSaveSettings();
+    closePollAnswerSettings();
+    var app = window.chatApp;
+    if (app && app.showNotification) app.showNotification('对方作答时间设置已保存');
+}
+
+/* ── 设置页：梦角发送 ── */
+function openPollDreamSettings() {
+    var s = _pollGetSettings();
+    var a = document.getElementById('pollAutoMinInput');
+    var au = document.getElementById('pollAutoMinUnit');
+    var b = document.getElementById('pollAutoMaxInput');
+    var bu = document.getElementById('pollAutoMaxUnit');
+    var c1 = document.getElementById('pollCountMinInput');
+    var c2 = document.getElementById('pollCountMaxInput');
+    if (a) a.value = s.autoMin;
+    if (au) au.value = s.autoMinUnit || '分钟';
+    if (b) b.value = s.autoMax;
+    if (bu) bu.value = s.autoMaxUnit || '分钟';
+    if (c1) c1.value = s.countMin;
+    if (c2) c2.value = s.countMax;
+    var page = document.getElementById('pollDreamSettingsPage');
+    if (page) page.classList.add('open');
+}
+function closePollDreamSettings() {
+    var page = document.getElementById('pollDreamSettingsPage');
+    if (page) page.classList.remove('open');
+}
+function savePollDreamSettings() {
+    var a = document.getElementById('pollAutoMinInput');
+    var au = document.getElementById('pollAutoMinUnit');
+    var b = document.getElementById('pollAutoMaxInput');
+    var bu = document.getElementById('pollAutoMaxUnit');
+    var c1 = document.getElementById('pollCountMinInput');
+    var c2 = document.getElementById('pollCountMaxInput');
+    var minV = parseInt(a && a.value, 10);
+    var maxV = parseInt(b && b.value, 10);
+    var nMin = parseInt(c1 && c1.value, 10);
+    var nMax = parseInt(c2 && c2.value, 10);
+    if (!(minV >= 1) || !(maxV >= 1)) { alert('最短 / 最长间隔都必须是不小于 1 的数字'); return; }
+    if (!(nMin >= 0) || !(nMax >= 0)) { alert('发送次数必须是不小于 0 的数字'); return; }
+    var minMs = _pollUnitMs(minV, au && au.value);
+    var maxMs = _pollUnitMs(maxV, bu && bu.value);
+    if (maxMs < minMs) { alert('最长间隔不能小于最短间隔'); return; }
+    if (nMax < nMin) { alert('最多次数不能小于最少次数'); return; }
+    var s = _pollGetSettings();
+    s.autoMin = minV; s.autoMinUnit = (au && au.value) || '分钟';
+    s.autoMax = maxV; s.autoMaxUnit = (bu && bu.value) || '分钟';
+    s.countMin = nMin; s.countMax = nMax;
+    _pollSaveSettings();
+    closePollDreamSettings();
+    renderPollDreamHint();
+    /* 间隔/次数变更：清空旧周期，立即按新设置开启新周期 */
+    var app = window.chatApp;
+    if (app && app.appData) {
+        app.appData.pollAutoSchedule = null;
+        _pollPersistSchedule();
+    }
+    schedulePollAutoSend();
+    if (app && app.showNotification) app.showNotification('梦角发送设置已保存');
+}
+
+/* ── 构建器（用户发送 / 梦角预设 共用逻辑） ── */
+var _pollBuilder = { mode: 'single', questionImage: null, options: [] };
+var _pollDreamBuilder = { mode: 'single', questionImage: null, options: [] };
+
+function _getPollBuilder(prefix) {
+    return prefix === 'dream' ? _pollDreamBuilder : _pollBuilder;
+}
+function _pollBuilderIds(prefix) {
+    return prefix === 'dream' ? {
+        qInput: 'pollDreamQuestionInput',
+        qImgRow: 'pollDreamQuestionImgRow',
+        optionsCard: 'pollDreamOptionsCard',
+        optionsContainer: 'pollDreamOptionsContainer',
+        modeBtns: { single: 'pollDreamModeSingle', multi: 'pollDreamModeMulti', fill: 'pollDreamModeFill' }
+    } : {
+        qInput: 'pollQuestionInput',
+        qImgRow: 'pollQuestionImgRow',
+        optionsCard: 'pollOptionsCard',
+        optionsContainer: 'pollOptionsContainer',
+        modeBtns: { single: 'pollModeSingle', multi: 'pollModeMulti', fill: 'pollModeFill' }
+    };
+}
+function _resetUserBuilder() {
+    _pollBuilder = { mode: 'single', questionImage: null, options: [{ text: '', image: null }, { text: '', image: null }] };
+    var qi = document.getElementById('pollQuestionInput');
+    if (qi) qi.value = '';
+}
+function _resetDreamBuilder() {
+    _pollDreamBuilder = { mode: 'single', questionImage: null, options: [{ text: '', image: null }, { text: '', image: null }] };
+    var qi = document.getElementById('pollDreamQuestionInput');
+    if (qi) qi.value = '';
+}
+function _renderPollBuilder(prefix) {
+    var b = _getPollBuilder(prefix);
+    var ids = _pollBuilderIds(prefix);
+    /* 题型按钮 */
+    ['single', 'multi', 'fill'].forEach(function(m) {
+        var btn = document.getElementById(ids.modeBtns[m]);
+        if (btn) btn.classList.toggle('active', b.mode === m);
+    });
+    /* 选项卡片显隐 */
+    var card = document.getElementById(ids.optionsContainer);
+    if (card) card.closest('.poll-card').style.display = (b.mode === 'fill') ? 'none' : '';
+    /* 问题图片行 */
+    var qRow = document.getElementById(ids.qImgRow);
+    if (qRow) {
+        qRow.innerHTML = '';
+        if (b.questionImage) {
+            var th = document.createElement('div');
+            th.className = 'poll-img-thumb';
+            th.innerHTML = '<img src="' + b.questionImage + '">';
+            var del = document.createElement('button');
+            del.className = 'poll-img-del';
+            del.textContent = '×';
+            del.onclick = function() { b.questionImage = null; _renderPollBuilder(prefix); };
+            th.appendChild(del);
+            th.onclick = function(e) { if (e.target === th.querySelector('img')) _pollViewImage(b.questionImage); };
+            qRow.appendChild(th);
+        }
+        var add = document.createElement('button');
+        add.className = 'poll-img-add-btn';
+        add.textContent = '＋';
+        add.title = '添加问题图片（可选）';
+        add.onclick = function() {
+            _pollPickImage(function(dataUrl) {
+                b.questionImage = dataUrl;
+                _renderPollBuilder(prefix);
+            });
+        };
+        qRow.appendChild(add);
+        var tip = document.createElement('span');
+        tip.style.cssText = 'font-size:12px;color:var(--accent-gray);';
+        tip.textContent = '问题图片（可选，发送后按原尺寸显示）';
+        qRow.appendChild(tip);
+    }
+    /* 选项行 */
+    var c = document.getElementById(ids.optionsContainer);
+    if (c) {
+        c.innerHTML = '';
+        b.options.forEach(function(opt, i) {
+            c.appendChild(_buildPollOptionRow(prefix, i));
+        });
+    }
+}
+function _buildPollOptionRow(prefix, i) {
+    var b = _getPollBuilder(prefix);
+    var opt = b.options[i];
+    var letter = String.fromCharCode(65 + i);
+    var row = document.createElement('div');
+    row.className = 'poll-option-row';
+    var inner = document.createElement('div');
+    inner.style.cssText = 'flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;';
+    var inp = document.createElement('input');
+    inp.className = 'poll-option-input poll-opt-val';
+    inp.type = 'text';
+    inp.placeholder = '选项 ' + letter + '（可留空文字配图片）';
+    inp.maxLength = 60;
+    inp.value = opt.text || '';
+    inp.oninput = function() { opt.text = inp.value; };
+    inner.appendChild(inp);
+    /* 选项图片行 */
+    var imgRow = document.createElement('div');
+    imgRow.className = 'poll-option-img-row';
+    if (opt.image) {
+        var im = document.createElement('img');
+        im.className = 'poll-option-img';
+        im.src = opt.image;
+        im.onclick = function() { _pollViewImage(opt.image); };
+        imgRow.appendChild(im);
+        var del = document.createElement('button');
+        del.className = 'poll-option-remove';
+        del.textContent = '×';
+        del.title = '移除选项图片';
+        del.onclick = function() { opt.image = null; _renderPollBuilder(prefix); };
+        imgRow.appendChild(del);
+    } else {
+        var add = document.createElement('button');
+        add.className = 'poll-option-img-add';
+        add.textContent = '＋';
+        add.title = '添加选项图片';
+        add.onclick = function() {
+            _pollPickImage(function(dataUrl) {
+                opt.image = dataUrl;
+                _renderPollBuilder(prefix);
+            });
+        };
+        imgRow.appendChild(add);
+        var tip = document.createElement('span');
+        tip.style.cssText = 'font-size:11px;color:var(--accent-gray);';
+        tip.textContent = '图片（可选）';
+        imgRow.appendChild(tip);
+    }
+    inner.appendChild(imgRow);
+    row.appendChild(inner);
+    var rm = document.createElement('button');
+    rm.className = 'poll-option-remove';
+    rm.textContent = '×';
+    rm.title = '删除选项';
+    rm.onclick = function() { removePollOptionRow(prefix, i); };
+    row.appendChild(rm);
+    return row;
+}
+function setPollBuilderMode(mode) {
+    _pollBuilder.mode = mode;
+    _renderPollBuilder('user');
+}
+function setPollDreamBuilderMode(mode) {
+    _pollDreamBuilder.mode = mode;
+    _renderPollBuilder('dream');
+}
+function addPollOption() {
+    _pollBuilder.options.push({ text: '', image: null });
+    _renderPollBuilder('user');
+}
+function addPollDreamOption() {
+    _pollDreamBuilder.options.push({ text: '', image: null });
+    _renderPollBuilder('dream');
+}
+function removePollOptionRow(prefix, i) {
+    var b = _getPollBuilder(prefix);
+    if (b.options.length <= 2) { alert('至少保留 2 个选项'); return; }
+    b.options.splice(i, 1);
+    _renderPollBuilder(prefix);
+}
+/* 兼容旧入口 */
+function initPollOptions() {
+    _resetUserBuilder();
+    _renderPollBuilder('user');
+}
+function removePollOption(btn) {
+    /* 兼容旧入口：按行删除用户构建器选项 */
+    var row = btn.closest('.poll-option-row');
+    var c = row && row.parentElement;
+    if (!c) return;
+    var rows = c.querySelectorAll('.poll-option-row');
+    if (rows.length <= 2) { alert('至少保留 2 个选项'); return; }
+    var idx = Array.prototype.indexOf.call(rows, row);
+    removePollOptionRow('user', idx);
+}
+
+/* ── 梦角预设管理 ── */
+function savePollPreset() {
+    var b = _pollDreamBuilder;
+    var qi = document.getElementById('pollDreamQuestionInput');
+    var q = (qi && qi.value) || '';
+    if (!q.trim()) { alert('请输入预设问题（问题必须包含文字）'); return; }
+    if (b.mode !== 'fill') {
+        var valid = b.options.filter(function(o) { return (o.text && o.text.trim()) || o.image; });
+        if (valid.length < 2) { alert('至少填写 2 个有效选项（文字或图片）'); return; }
+        b.options = valid;
+    }
+    var app = window.chatApp;
+    if (!app) return;
+    var s = _pollGetSettings();
+    s.presets.push({
+        id: 'preset_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        mode: b.mode,
+        question: q.trim(),
+        questionImage: b.questionImage || null,
+        options: b.options.map(function(o) { return { text: (o.text || '').trim(), image: o.image || null }; }),
+        enabled: true
+    });
+    _pollSaveSettings();
+    _resetDreamBuilder();
+    _renderPollBuilder('dream');
+    renderPollPresets();
+    renderPollDreamHint();
+    schedulePollAutoSend();
+    if (app.showNotification) app.showNotification('预设问题已保存');
+}
+function renderPollPresets() {
+    var list = document.getElementById('pollPresetList');
+    if (!list) return;
+    var s = _pollGetSettings();
+    if (!s.presets.length) {
+        list.innerHTML = '<div class="poll-history-empty">还没有预设问题</div>';
+        return;
+    }
+    list.innerHTML = '';
+    s.presets.forEach(function(p) {
+        var card = document.createElement('div');
+        card.className = 'poll-preset-card' + (p.enabled === false ? ' poll-preset-disabled' : '');
+        var row1 = document.createElement('div');
+        row1.className = 'poll-preset-row1';
+        var q = document.createElement('div');
+        q.className = 'poll-preset-q';
+        q.textContent = p.question;
+        row1.appendChild(q);
+        var ops = document.createElement('div');
+        ops.className = 'poll-preset-ops';
+        var mk = function(txt, fn) {
+            var btn = document.createElement('button');
+            btn.className = 'poll-preset-op';
+            btn.textContent = txt;
+            btn.onclick = fn;
+            ops.appendChild(btn);
+        };
+        mk(p.enabled === false ? '启用' : '停用', function() { togglePollPreset(p.id); });
+        mk('编辑', function() { editPollPreset(p.id); });
+        mk('删除', function() { deletePollPreset(p.id); });
+        row1.appendChild(ops);
+        card.appendChild(row1);
+        var meta = document.createElement('div');
+        meta.className = 'poll-preset-meta';
+        var modeName = p.mode === 'multi' ? '多选' : p.mode === 'fill' ? '填空' : '单选';
+        var optCount = (p.options || []).length;
+        var hasImg = p.questionImage || (p.options || []).some(function(o) { return o.image; });
+        meta.textContent = modeName + ' · ' + optCount + ' 个选项' + (hasImg ? ' · 含图片' : '') + (p.enabled === false ? ' · 已停用' : '');
+        card.appendChild(meta);
+        list.appendChild(card);
+    });
+}
+function editPollPreset(id) {
+    var s = _pollGetSettings();
+    var p = s.presets.find(function(x) { return x.id === id; });
+    if (!p) return;
+    _pollDreamBuilder = {
+        mode: p.mode || 'single',
+        questionImage: p.questionImage || null,
+        options: (p.options && p.options.length ? p.options : [{ text: '', image: null }, { text: '', image: null }])
+            .map(function(o) { return { text: o.text || '', image: o.image || null }; })
+    };
+    /* 编辑保存：删除旧预设，保存时生成新的 */
+    s.presets = s.presets.filter(function(x) { return x.id !== id; });
+    _pollSaveSettings();
+    var qi = document.getElementById('pollDreamQuestionInput');
+    if (qi) qi.value = p.question;
+    _renderPollBuilder('dream');
+    renderPollPresets();
+    renderPollDreamHint();
+    schedulePollAutoSend();
+    window.scrollTo && window.scrollTo(0, 0);
+    var panel = document.getElementById('pollPanelDream');
+    if (panel) panel.scrollTop = 0;
+}
+function deletePollPreset(id) {
+    if (!confirm('确定删除这条预设问题吗？')) return;
+    var s = _pollGetSettings();
+    s.presets = s.presets.filter(function(x) { return x.id !== id; });
+    _pollSaveSettings();
+    renderPollPresets();
+    renderPollDreamHint();
+    schedulePollAutoSend();
+}
+function togglePollPreset(id) {
+    var s = _pollGetSettings();
+    var p = s.presets.find(function(x) { return x.id === id; });
+    if (!p) return;
+    p.enabled = (p.enabled === false);
+    _pollSaveSettings();
+    renderPollPresets();
+    renderPollDreamHint();
+    schedulePollAutoSend();
+}
+function renderPollDreamHint() {
+    var el = document.getElementById('pollDreamHint');
+    if (!el) return;
+    var s = _pollGetSettings();
+    var n = s.presets.filter(function(p) { return p.enabled !== false; }).length;
+    el.innerHTML = '当前设置：每 <b>' + s.autoMin + ' ' + s.autoMinUnit + '</b> 至 <b>' + s.autoMax + ' ' + s.autoMaxUnit +
+        '</b> 之间随机一个周期，周期内随机发送 <b>' + s.countMin + ' ~ ' + s.countMax + '</b> 次选1选给你回答。' +
+        '已启用预设：<b>' + n + '</b> 个' + (n ? '。' : '（保存并启用预设后才会开始发送）。');
+}
+
+/* ── 梦角选1选周期调度器 ── */
+function _pollClearAutoTimers() {
+    _pollAutoTimers.forEach(function(t) { clearTimeout(t); });
+    _pollAutoTimers = [];
+}
+function schedulePollAutoSend() {
+    _pollClearAutoTimers();
+    var app = window.chatApp;
+    if (!app || !app.appData || !app.appData.messages) return;
+    var s = _pollGetSettings();
+    var enabled = s.presets.filter(function(p) { return p.enabled !== false; });
+    var now = Date.now();
+    if (!enabled.length || (Number(s.countMax) || 0) <= 0) {
+        app.appData.pollAutoSchedule = null;
+        _pollPersistSchedule();
+        return;
+    }
+    var sched = app.appData.pollAutoSchedule;
+    if (sched && sched.cycleEnd && sched.cycleEnd > now) {
+        /* 接续当前周期：未来时刻排定时器，错过时刻最多补发 3 条（避免刷屏） */
+        var backfilled = 0;
+        (sched.sends || []).forEach(function(send) {
+            if (send.done) return;
+            if (send.at > now) {
+                _pollAutoTimers.push(setTimeout(function() { triggerDreamPollSend(send.at); }, send.at - now));
+            } else if (backfilled < 3) {
+                backfilled++;
+                var delay = backfilled * 20000;
+                _pollAutoTimers.push(setTimeout(function() { triggerDreamPollSend(send.at); }, delay));
+            } else {
+                send.done = true;
+            }
+        });
+        _pollPersistSchedule();
+        _pollAutoTimers.push(setTimeout(function() { _pollStartAutoCycle(); }, sched.cycleEnd - now + 1000));
+    } else {
+        _pollStartAutoCycle();
+    }
+}
+function _pollStartAutoCycle() {
+    var app = window.chatApp;
+    if (!app || !app.appData) return;
+    var s = _pollGetSettings();
+    var enabled = s.presets.filter(function(p) { return p.enabled !== false; });
+    if (!enabled.length || (Number(s.countMax) || 0) <= 0) {
+        app.appData.pollAutoSchedule = null;
+        _pollPersistSchedule();
+        return;
+    }
+    var minMs = _pollUnitMs(s.autoMin, s.autoMinUnit);
+    var maxMs = _pollUnitMs(s.autoMax, s.autoMaxUnit);
+    if (maxMs < minMs) maxMs = minMs;
+    var D = minMs + Math.floor(Math.random() * (maxMs - minMs + 1));
+    var cMin = Math.max(0, parseInt(s.countMin, 10) || 0);
+    var cMax = Math.max(cMin, parseInt(s.countMax, 10) || 0);
+    var N = _pollRandInt(cMin, cMax);
+    var now = Date.now();
+    var cycleEnd = now + D;
+    var sends = [];
+    for (var i = 0; i < N; i++) {
+        sends.push({ at: now + Math.floor(Math.random() * D), done: false });
+    }
+    sends.sort(function(a, b) { return a.at - b.at; });
+    app.appData.pollAutoSchedule = { cycleEnd: cycleEnd, sends: sends };
+    _pollPersistSchedule();
+    _pollClearAutoTimers();
+    sends.forEach(function(send) {
+        if (send.at > now) {
+            _pollAutoTimers.push(setTimeout(function() { triggerDreamPollSend(send.at); }, send.at - now));
+        }
+    });
+    _pollAutoTimers.push(setTimeout(function() { _pollStartAutoCycle(); }, cycleEnd - now + 1000));
+}
+function triggerDreamPollSend(sendAt) {
+    var app = window.chatApp;
+    if (!app || !app.appData || !app.appData.messages) return;
+    var s = _pollGetSettings();
+    var enabled = s.presets.filter(function(p) { return p.enabled !== false; });
+    if (!enabled.length) return;
+    /* 标记该次发送已完成 */
+    var sched = app.appData.pollAutoSchedule;
+    if (sched && sched.sends) {
+        var hit = sched.sends.find(function(x) { return !x.done && x.at === sendAt; });
+        if (hit) hit.done = true;
+    }
+    _pollPersistSchedule();
+    var preset = enabled[Math.floor(Math.random() * enabled.length)];
+    var msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    app.appData.messages.push({
+        id: msgId,
+        sender: 'other',
+        type: 'poll',
+        time: app.dataManager.getFormattedTime(Date.now()),
+        read: false,
+        pollData: {
+            question: preset.question,
+            questionImage: preset.questionImage || null,
+            mode: preset.mode || 'single',
+            options: _pollNormOptions(preset.options),
+            selectedIndex: null,
+            selectedIndexes: null,
+            fillAnswer: null,
+            answeredAt: null,
+            deadline: 0,
+            expired: false,
+            fromDream: true
+        }
+    });
+    app.markDirty();
+    app.renderMessages();
+}
+/* 启动（带重试）：等待 chatApp 与消息数据就绪后接续调度 */
+(function _pollBoot() {
+    var tries = 0;
+    function boot() {
+        var app = window.chatApp;
+        if (app && app.appData && app.appData.messages && app.dataManager) {
+            if (!app.appData.pollSettings) app.appData.pollSettings = app.dataManager.getPollSettings();
+            if (!app.appData.pollAutoSchedule) app.appData.pollAutoSchedule = app.dataManager.getPollAutoSchedule();
+            schedulePollAutoSend();
+        } else if (tries++ < 60) {
+            setTimeout(boot, 500);
+        }
+    }
+    setTimeout(boot, 600);
+})();
+
+/* ── 发送投票（用户 → 对方，支持单选/多选/填空 + 图文） ── */
+function doSendPoll() {
+    var b = _pollBuilder;
+    var qi = document.getElementById('pollQuestionInput');
+    var question = (qi && qi.value) || '';
+    if (!question.trim()) { alert('请输入问题（问题必须包含文字）'); return; }
+
+    var options;
+    if (b.mode === 'fill') {
+        options = [];
+    } else {
+        var valid = b.options.filter(function(o) { return (o.text && o.text.trim()) || o.image; });
+        if (valid.length < 2) { alert('至少填写 2 个有效选项（文字或图片）'); return; }
+        options = valid.map(function(o) { return { text: (o.text || '').trim(), image: o.image || null }; });
+    }
+
+    var app = window.chatApp;
+    if (!app) return;
+
+    /* 按设置的对方作答时间（最短~最长）随机延迟 */
+    var s = _pollGetSettings();
+    var minMs = _pollUnitMs(s.answerMin, s.answerMinUnit);
+    var maxMs = _pollUnitMs(s.answerMax, s.answerMaxUnit);
+    if (maxMs < minMs) maxMs = minMs;
+    var autoDelay = minMs + Math.floor(Math.random() * (maxMs - minMs + 1));
+
+    var msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    var deadline = Date.now() + maxMs + 3000;
+    var pollMsg = {
+        id: msgId,
+        sender: 'self',
+        type: 'poll',
+        time: app.dataManager.getFormattedTime(Date.now()),
+        read: false,
+        pollData: {
+            question: question.trim(),
+            questionImage: b.questionImage || null,
+            mode: b.mode,
+            options: options,
+            selectedIndex: null,
+            selectedIndexes: null,
+            fillAnswer: null,
+            answeredAt: null,
+            deadline: deadline,
+            expired: false
+        }
+    };
+    app.appData.messages.push(pollMsg);
+    app.markDirty();
+    app.renderMessages();
+    closePollPage();
+
+    /* 显示"对方正在选1选"状态浮窗（与普通回复的浮窗互不干扰） */
+    app.setTypingStatus('poll');
+    app.startTypingIndicator();
+
+    /* 对方在设定的最短~最长时间内随机作答 */
+    var autoTid = setTimeout(function() {
+        delete _pollCountdowns[msgId + '_auto'];
+        _pollAutoAnswerOther(msgId);
+    }, autoDelay);
+    _pollCountdowns[msgId + '_auto'] = autoTid;
+
+    /* 兜底：超过最长时间仍未作答则标记超时 */
+    var expTid = setTimeout(function() {
+        delete _pollCountdowns[msgId + '_exp'];
+        var m = app.appData.messages.find(function(x) { return x.id === msgId; });
+        if (m && m.pollData && !_pollIsAnswered(m.pollData)) {
+            m.pollData.expired = true;
+            app.stopTypingIndicator('poll');
+            app.markDirty();
+            _pollRefreshMsgDom(msgId);
+        }
+    }, maxMs + 3200);
+    _pollCountdowns[msgId + '_exp'] = expTid;
+}
+
+/* ── 对方自动作答（按题型：单选随机 / 多选随机子集 / 填空随机文案） ── */
+var _POLL_FILL_POOL = [
+    '嗯…让我想想', '当然可以呀', '想和你一起', '都可以，听你的',
+    '嗯嗯，我也是这么想的', '偷偷告诉你：是的', '当然啦', '这个嘛…先保密',
+    '好呀好呀', '我心里想的是你'
+];
+function _pollAutoAnswerOther(msgId) {
+    var app = window.chatApp;
+    if (!app) return;
+    var m = app.appData.messages.find(function(x) { return x.id === msgId; });
+    if (!m || !m.pollData || _pollIsAnswered(m.pollData) || m.pollData.expired) return;
+    var d = m.pollData;
+    var mode = d.mode || 'single';
+    if (mode === 'single') {
+        selectPollOption(msgId, Math.floor(Math.random() * d.options.length));
+    } else if (mode === 'multi') {
+        var n = _pollRandInt(1, d.options.length);
+        var pool = [];
+        for (var i = 0; i < d.options.length; i++) pool.push(i);
+        var idxs = [];
+        for (var j = 0; j < n; j++) idxs.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+        idxs.sort(function(a, b2) { return a - b2; });
+        d.selectedIndexes = idxs;
+        _pollFinalizeOtherAnswer(m, app);
+    } else {
+        /* 填空题（仅用户发给对方的）：对方从「回复词条管理」已启用分组的字卡库中，
+           按设置的最少~最多条数随机抽取字卡作为回答 */
+        var fs = _pollGetSettings();
+        var fcMin = Math.max(1, parseInt(fs.fillCardsMin, 10) || 1);
+        var fcMax = Math.max(fcMin, parseInt(fs.fillCardsMax, 10) || fcMin);
+        var wantCards = _pollRandInt(fcMin, fcMax);
+        var pickedCards = [];
+        if (app && typeof app._pickPhraseCards === 'function') {
+            try { pickedCards = app._pickPhraseCards(wantCards) || []; } catch (e) { pickedCards = []; }
+        }
+        if (!pickedCards.length) {
+            /* 兜底：从普通回复词条（未分组）里随机抽取 */
+            var flatPool = [];
+            if (app && app.appData && Array.isArray(app.appData.responsePhrases)) {
+                flatPool = app.appData.responsePhrases.filter(function(p) { return p && String(p).trim(); });
+            }
+            for (var fi = 0; fi < wantCards && flatPool.length; fi++) {
+                pickedCards.push(flatPool.splice(Math.floor(Math.random() * flatPool.length), 1)[0]);
+            }
+        }
+        d.fillAnswer = pickedCards.length
+            ? pickedCards.join('，')
+            : _POLL_FILL_POOL[Math.floor(Math.random() * _POLL_FILL_POOL.length)];
+        _pollFinalizeOtherAnswer(m, app);
+    }
+}
+function _pollFinalizeOtherAnswer(m, app) {
+    /* 清除所有关联定时器 */
+    var msgId = m.id;
+    ['', '_auto', '_exp', 'cd_'].forEach(function(pfx) {
+        var key = pfx === 'cd_' ? 'cd_' + msgId : msgId + pfx;
+        if (_pollCountdowns[key]) {
+            clearTimeout(_pollCountdowns[key]);
+            delete _pollCountdowns[key];
+        }
+    });
+    /* 关闭"正在选1选"状态浮窗（仅当选1选浮窗还在展示时） */
+    app.stopTypingIndicator('poll');
+
+    var now = app.dataManager.getFormattedTime(Date.now());
+    m.pollData.answeredAt = now;
+
+    /* 自动回复消息（sender=other），高亮被选中的选项 */
+    var replyId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    app.appData.messages.push({
+        id: replyId,
+        sender: 'other',
+        type: 'poll',
+        time: now,
+        read: true,
+        pollData: {
+            question: m.pollData.question,
+            questionImage: m.pollData.questionImage || null,
+            mode: m.pollData.mode || 'single',
+            options: _pollNormOptions(m.pollData.options),
+            selectedIndex: (m.pollData.selectedIndex === undefined ? null : m.pollData.selectedIndex),
+            selectedIndexes: m.pollData.selectedIndexes || null,
+            fillAnswer: m.pollData.fillAnswer || null,
+            answeredAt: now,
+            deadline: 0,
+            expired: false,
+            isReply: true
+        }
+    });
+    app.markDirty();
+    app.renderMessages();
+    renderPollHistory();
+}
+
+/* ── 聊天卡片渲染（兼容旧版字符串选项数据） ── */
+function renderPollMsgCard(msg, container) {
+    var app = window.chatApp;
+    var data = msg.pollData;
+    if (!data) {
+        container.innerHTML = '<div style="padding:10px 12px;color:#999;font-size:13px;">[投票已失效]</div>';
+        return;
+    }
+    data.options = _pollNormOptions(data.options);
+    var mode = data.mode || 'single';
+    var isAnswered = _pollIsAnswered(data);
+    var isReply = !!data.isReply;
+    var fromDream = !!data.fromDream;
+    var isExpired = data.expired && !isAnswered;
+
+    /* 旧数据刷新后兜底：用户发送且已过截止时间 → 标记超时并局部重绘 */
+    if (!fromDream && !isReply && !isAnswered && !isExpired && data.deadline && Date.now() > data.deadline) {
+        data.expired = true;
+        if (app) app.markDirty();
+        isExpired = true;
+    }
+
+    var card = document.createElement('div');
+    card.className = 'poll-msg-card';
+
+    /* 平台条 */
+    var bar = document.createElement('div');
+    bar.className = 'poll-msg-platform-bar';
+    bar.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="5" rx="2.5"/>' +
+        '<rect x="2" y="11" width="15" height="5" rx="2.5" opacity="0.7"/>' +
+        '<rect x="2" y="18" width="17" height="5" rx="2.5" opacity="0.5"/></svg>' +
+        (fromDream && !isReply ? '选 1 选 · 对方的提问' : '选 1 选');
+    card.appendChild(bar);
+
+    /* 问题（文字 + 可选图片，图片按原尺寸显示） */
+    var q = document.createElement('div');
+    q.className = 'poll-msg-question';
+    q.textContent = data.question;
+    card.appendChild(q);
+    if (data.questionImage) {
+        var qi = document.createElement('img');
+        qi.className = 'poll-msg-qimage';
+        qi.src = data.questionImage;
+        qi.onclick = function(e) { e.stopPropagation(); _pollViewImage(data.questionImage); };
+        card.appendChild(qi);
+    }
+
+    var userAnswers = fromDream && !isReply && !isAnswered && !isExpired;
+    var interactive = !isAnswered && !isExpired && (
+        userAnswers ||                       /* 梦角发来的，用户作答 */
+        (!fromDream && !isReply && mode === 'single') /* 用户发的单选，可手动点选替对方作答（保留旧行为） */
+    );
+
+    /* 填空题 */
+    if (mode === 'fill') {
+        if (userAnswers) {
+            var ta = document.createElement('textarea');
+            ta.className = 'poll-msg-fill-input';
+            ta.id = 'pollFillInput_' + msg.id;
+            ta.placeholder = '输入你的回答…';
+            ta.rows = 2;
+            card.appendChild(ta);
+            var sendBtn = document.createElement('button');
+            sendBtn.className = 'poll-msg-fill-send';
+            sendBtn.textContent = '提交回答';
+            sendBtn.onclick = function(e) { e.stopPropagation(); submitPollUserAnswer(msg.id); };
+            card.appendChild(sendBtn);
+        } else if (isAnswered) {
+            var fa = document.createElement('div');
+            fa.className = 'poll-msg-option';
+            fa.style.cssText += ';cursor:default;background:rgba(196,172,170,0.25);font-weight:600;';
+            var faTxt = document.createElement('span');
+            faTxt.className = 'poll-msg-opt-text';
+            faTxt.textContent = (fromDream && !isReply ? '我的回答：' : '对方的回答：') + (data.fillAnswer || '');
+            fa.appendChild(faTxt);
+            card.appendChild(fa);
+        }
+    } else {
+        /* 选项列表 */
+        var opts = document.createElement('div');
+        opts.className = 'poll-msg-options';
+        var selectedIdx = data.selectedIndex;
+        var multiSel = Array.isArray(data.selectedIndexes) ? data.selectedIndexes : [];
+
+        data.options.forEach(function(opt, i) {
+            var letter = String.fromCharCode(65 + i);
+            var el = document.createElement('div');
+            el.className = 'poll-msg-option' +
+                (!interactive ? ' disabled' : '') +
+                ((selectedIdx === i || multiSel.indexOf(i) >= 0) ? ' selected' : '');
+            el.dataset.idx = i;
+            el.innerHTML = '<span class="poll-msg-option-label">' + letter + '</span>';
+            if (opt.image) {
+                var oim = document.createElement('img');
+                oim.className = 'poll-msg-option-img';
+                oim.src = opt.image;
+                el.appendChild(oim);
+            }
+            var txt = document.createElement('span');
+            txt.className = 'poll-msg-opt-text';
+            txt.textContent = opt.text || (opt.image ? '' : '(空)');
+            el.appendChild(txt);
+            if (interactive) {
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (userAnswers) {
+                        if (mode === 'single') {
+                            submitPollUserAnswerSingle(msg.id, i);
+                        } else {
+                            el.classList.toggle('selected');
+                        }
+                    } else {
+                        selectPollOption(msg.id, i);
+                    }
+                });
+            }
+            opts.appendChild(el);
+        });
+        card.appendChild(opts);
+
+        /* 多选：用户作答时的提交按钮 */
+        if (userAnswers && mode === 'multi') {
+            var mBtn = document.createElement('button');
+            mBtn.className = 'poll-msg-fill-send';
+            mBtn.textContent = '提交多选';
+            mBtn.onclick = function(e) { e.stopPropagation(); submitPollUserAnswer(msg.id); };
+            card.appendChild(mBtn);
+        }
+    }
+
+    /* 状态行 */
+    if (isAnswered) {
+        var ans = document.createElement('div');
+        ans.className = 'poll-msg-answered';
+        var prefix = (fromDream && !isReply) ? '我已作答 · ' : '已作答 · ';
+        ans.textContent = prefix + (data.answeredAt || '');
+        card.appendChild(ans);
+    } else if (isExpired) {
+        var exp = document.createElement('div');
+        exp.className = 'poll-msg-answered';
+        exp.textContent = fromDream ? '已超时，未作答' : '已超时，对方未选择';
+        card.appendChild(exp);
+    } else {
+        if (fromDream) {
+            var wait = document.createElement('div');
+            wait.className = 'poll-msg-answered';
+            wait.textContent = mode === 'single' ? '点击选项作答' : (mode === 'multi' ? '点选多个选项后提交' : '');
+            if (wait.textContent) card.appendChild(wait);
+        } else {
+            /* 到期后标记 expired 的兜底定时器 */
+            if (data.deadline && !_pollCountdowns['cd_' + msg.id]) {
+                var cdTid = setTimeout(function() {
+                    delete _pollCountdowns['cd_' + msg.id];
+                    var m = app && app.appData.messages.find(function(x) { return x.id === msg.id; });
+                    if (m && m.pollData && !_pollIsAnswered(m.pollData)) {
+                        m.pollData.expired = true;
+                        if (app) app.stopTypingIndicator('poll');
+                        if (app) app.markDirty();
+                        _pollRefreshMsgDom(msg.id);
+                    }
+                }, Math.max(0, data.deadline - Date.now()));
+                _pollCountdowns['cd_' + msg.id] = cdTid;
+            }
+        }
+    }
+
+    container.appendChild(card);
+}
+
+/* ── 对方选择选项（用户发送的单选，自动/手动触发） ── */
+function selectPollOption(msgId, optionIndex) {
+    var app = window.chatApp;
+    if (!app) return;
+    var m = app.appData.messages.find(function(x) { return x.id === msgId; });
+    if (!m || !m.pollData || _pollIsAnswered(m.pollData) || m.pollData.expired) return;
+
+    m.pollData.selectedIndex = optionIndex;
+    _pollFinalizeOtherAnswer(m, app);
+}
+
+/* ── 用户作答（梦角发来的选1选） ── */
+function submitPollUserAnswerSingle(msgId, optionIndex) {
+    var app = window.chatApp;
+    if (!app) return;
+    var m = app.appData.messages.find(function(x) { return x.id === msgId; });
+    if (!m || !m.pollData || _pollIsAnswered(m.pollData)) return;
+    m.pollData.selectedIndex = optionIndex;
+    m.pollData.answeredAt = app.dataManager.getFormattedTime(Date.now());
+    app.markDirty();
+    _pollRefreshMsgDom(msgId);
+    renderPollHistory();
+}
+function submitPollUserAnswer(msgId) {
+    var app = window.chatApp;
+    if (!app) return;
+    var m = app.appData.messages.find(function(x) { return x.id === msgId; });
+    if (!m || !m.pollData || _pollIsAnswered(m.pollData)) return;
+    var d = m.pollData;
+    if ((d.mode || 'single') === 'fill') {
+        var ta = document.getElementById('pollFillInput_' + msgId);
+        var v = ta ? String(ta.value || '').trim() : '';
+        if (!v) { alert('请输入你的回答'); return; }
+        d.fillAnswer = v;
+    } else if (d.mode === 'multi') {
+        var el = document.querySelector('.message-container[data-message-id="' + msgId + '"]');
+        var sel = [];
+        if (el) {
+            el.querySelectorAll('.poll-msg-option.selected').forEach(function(o) {
+                sel.push(parseInt(o.dataset.idx, 10));
+            });
+        }
+        if (!sel.length) { alert('请至少选择 1 个选项'); return; }
+        sel.sort(function(a, b) { return a - b; });
+        d.selectedIndexes = sel;
+    }
+    d.answeredAt = app.dataManager.getFormattedTime(Date.now());
+    app.markDirty();
+    _pollRefreshMsgDom(msgId);
+    renderPollHistory();
+}
+
+/* ── 历史记录渲染（用户发送 + 梦角发送均保存） ── */
+function renderPollHistory() {
+    var list = document.getElementById('pollHistoryList');
+    if (!list) return;
+    var app = window.chatApp;
+    var msgs = (app && app.appData && app.appData.messages) || [];
+    /* 所有非回复投票（用户发送 + 梦角发送） */
+    var polls = msgs.filter(function(m) {
+        return m.type === 'poll' && !(m.pollData && m.pollData.isReply);
+    }).slice().reverse();
+
+    if (!polls.length) {
+        list.innerHTML = '<div class="poll-history-empty">还没有选1选记录</div>';
+        return;
+    }
+    list.innerHTML = '';
+    polls.forEach(function(m) {
+        var d = m.pollData;
+        var mode = d.mode || 'single';
+        var modeName = mode === 'multi' ? '[多选]' : mode === 'fill' ? '[填空]' : '[单选]';
+        var fromDream = !!d.fromDream;
+        var isAnswered = _pollIsAnswered(d);
+        var card = document.createElement('div');
+        card.className = 'poll-history-card';
+        var qEl = document.createElement('div');
+        qEl.className = 'poll-history-question';
+        qEl.textContent = (fromDream ? '对方提问 ' : '') + modeName + ' ' + d.question;
+        card.appendChild(qEl);
+
+        if (mode !== 'fill') {
+            d.options.forEach(function(opt, i) {
+                var letter = String.fromCharCode(65 + i);
+                var sel = (d.selectedIndex === i) ||
+                    (Array.isArray(d.selectedIndexes) && d.selectedIndexes.indexOf(i) >= 0);
+                var el = document.createElement('div');
+                el.className = 'poll-history-option' + (sel ? ' selected' : '');
+                var txt = letter + '. ' + (opt.text || (opt.image ? '[图片]' : ''));
+                el.textContent = txt + (sel ? '  ✓' : '');
+                card.appendChild(el);
+            });
+        } else if (isAnswered) {
+            var fe = document.createElement('div');
+            fe.className = 'poll-history-option selected';
+            fe.textContent = (fromDream ? '我的回答：' : '对方的回答：') + (d.fillAnswer || '');
+            card.appendChild(fe);
+        }
+        var meta = document.createElement('div');
+        meta.className = 'poll-history-meta';
+        if (isAnswered) {
+            if (mode === 'single') {
+                meta.textContent = (fromDream ? '我选择了 ' : '对方选择了 ') +
+                    String.fromCharCode(65 + d.selectedIndex) + '  ·  ' + (d.answeredAt || m.time);
+            } else if (mode === 'multi') {
+                var letters = (d.selectedIndexes || []).map(function(i) { return String.fromCharCode(65 + i); }).join('、');
+                meta.textContent = (fromDream ? '我选择了 ' : '对方选择了 ') + letters + '  ·  ' + (d.answeredAt || m.time);
+            } else {
+                meta.textContent = (fromDream ? '我已作答' : '对方已作答') + '  ·  ' + (d.answeredAt || m.time);
+            }
+        } else {
+            meta.textContent = d.expired
+                ? '已超时，未作答'
+                : (fromDream ? '等待我回答…' : '等待对方选择中…');
+        }
+        card.appendChild(meta);
+        list.appendChild(card);
+    });
+}
+
 </script>
 </body>
 </html>
